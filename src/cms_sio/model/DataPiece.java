@@ -15,8 +15,8 @@ import java.sql.SQLException;
  */
 public class DataPiece implements HasId {
 
-    VariableElement variableElement;
-    String content="";
+    public VariableElement variableElement;
+    public String content="";
     public int id;
     public DataPiece() {
     }
