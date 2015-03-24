@@ -24,11 +24,6 @@ import javafx.util.Duration;
 import java.util.Queue;
 import java.util.concurrent.LinkedBlockingQueue;
 
-/**
- * User: Alexander Vos
- * Date: 19.02.13
- * Time: 23:35
- */
 public class Toast extends Popup {
     //private static final Logger log = LoggerFactory.getLogger(Toast.class);
 
