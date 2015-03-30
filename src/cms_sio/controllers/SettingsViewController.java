@@ -7,6 +7,7 @@ package cms_sio.controllers;
 
 import cms_sio.model.Setting;
 import cms_sio.model.generic.database.DBUtils;
+import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -41,30 +42,36 @@ public class SettingsViewController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         int i=0;
         for (String name: propertyNames){
-            Setting setting=new Setting(name);
             
             try {
-                setting=(Setting) DBUtils.loadFromDB(setting , setting.getClass().getField("name" ) );
-                
+                Setting setting=new Setting(name);
+                if (DBUtils.connection != null) {
+                    try {
+                        setting = (Setting) DBUtils.loadFromDB(setting, setting.getClass().getField("name"));
+                    } catch (Exception ex) {
+                        
+                    }
+                }
                 FXMLLoader loader = new FXMLLoader(getClass().getResource( "/cms_sio/view/SettingView.fxml"));
-        
+                
                 Pane myPane = (Pane) loader.load();
-             
+                
                 SettingViewController settingViewController = (SettingViewController) loader.getController();
                 settingViewController.setData(setting);
                 if (gridPane==null){
-                 Logger.getLogger(SettingsViewController.class.getName()).log(Level.INFO, "root pan is null" );
+                    Logger.getLogger(SettingsViewController.class.getName()).log(Level.INFO, "root pan is null" );
                 }
                 if (gridPane.getChildren()==null){
-                 Logger.getLogger(SettingsViewController.class.getName()).log(Level.INFO, "root pan child is null" );
+                    Logger.getLogger(SettingsViewController.class.getName()).log(Level.INFO, "root pan child is null" );
                 }
                 
                 gridPane.add(myPane, 0, i);
                 i++;
-                
-            } catch (Exception ex) {
+            } catch (IOException ex) {
                 Logger.getLogger(SettingsViewController.class.getName()).log(Level.SEVERE, null, ex);
             }
+                
+           
            
             
         }

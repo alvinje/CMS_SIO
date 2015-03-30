@@ -5,7 +5,6 @@
  */
 package cms_sio;
 
-import cms_sio.controllers.SettingViewController;
 import cms_sio.model.Setting;
 import cms_sio.model.generic.database.DBUtils;
 import java.io.IOException;
@@ -14,13 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
-import javafx.geometry.Insets;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.layout.ColumnConstraints;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
@@ -35,9 +28,9 @@ public class CMS_SIO extends Application {
     
     @Override
     public void start(Stage stage) throws Exception {
-        
-
         showMain( stage) ;
+      
+       
     }
 
     /**
@@ -65,7 +58,7 @@ public class CMS_SIO extends Application {
        
         Scene scene=new Scene(myPane);
         String css = this.getClass().getResource("view/styles/glass.css").toExternalForm();
-       scene.getStylesheets().add(css); 
+        scene.getStylesheets().add(css); 
         stage.setScene(scene);
         stage.show();;
         

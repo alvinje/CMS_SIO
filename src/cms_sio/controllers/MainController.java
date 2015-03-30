@@ -25,39 +25,47 @@ import javafx.scene.layout.Pane;
  */
 public class MainController implements Initializable {
 
-    @FXML private Button page;
-    @FXML private Button data;
-    @FXML private Button template;    
-    @FXML private Button configuration; 
-    @FXML private FlowPane body; 
-    
-    public void showTemplate() throws IOException{
-       
+    @FXML
+    private Button page;
+    @FXML
+    private Button data;
+    @FXML
+    private Button template;
+    @FXML
+    private Button configuration;
+    @FXML
+    private FlowPane body;
+
+    public void showTemplate() throws IOException {
+
         FXMLLoader fxmlLoader = new FXMLLoader();
         Pane myPane = (Pane) fxmlLoader.load(getClass().getResource("/cms_sio/view/Template.fxml"));
         body.getChildren().clear();
         body.getChildren().add(myPane);
         Logger.getLogger(MainController.class.getName()).log(Level.INFO, "Show template");
-       
+
     }
-    public void showConfiguration() throws IOException{
+
+    public void showConfiguration() throws IOException {
         DBUtils.init();
         FXMLLoader fxmlLoader = new FXMLLoader();
         Pane myPane = (Pane) fxmlLoader.load(getClass().getResource("/cms_sio/view/SettingsView.fxml"));
         body.getChildren().clear();
         body.getChildren().add(myPane);
-       
+
     }
-    
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-     
         try {
-            showTemplate();
+            if (DBUtils.connect() == null) {
+                showConfiguration();
+            } else {
+                showTemplate();
+            }
         } catch (IOException ex) {
             Logger.getLogger(MainController.class.getName()).log(Level.SEVERE, null, ex);
         }
-     
-    }    
-    
+    }
+
 }

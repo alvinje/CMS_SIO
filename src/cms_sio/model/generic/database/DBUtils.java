@@ -13,6 +13,9 @@ import cms_sio.model.Setting;
 import cms_sio.model.Template;
 import cms_sio.model.VariableElement;
 import cms_sio.model.generic.HasId;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
 import java.lang.reflect.Constructor;
 
 import java.lang.reflect.Field;
@@ -31,76 +34,85 @@ import java.util.logging.Logger;
  * @author sgoyet
  */
 public class DBUtils {
+
+    public static final String DATABASE_FILE = "databaBaseFile";
+    public static String databasePath;
     public static Connection connection;
-    static HasId[] tablesObjects=new HasId[]{
-            new Configuration(),
-            new Data(),
-            new DataPiece(),
-            new Page(),
-            new Setting(),
-            new Template(),
-            new VariableElement()};
-    
-    public static void init(){
-        connect();
-        for (HasId hasId:tablesObjects){
-          
-             if (!checkTableExists(hasId)){
-                 createTable(hasId);
-            } 
-        }  
+    static HasId[] tablesObjects = new HasId[]{
+        new Configuration(),
+        new Data(),
+        new DataPiece(),
+        new Page(),
+        new Setting(),
+        new Template(),
+        new VariableElement()};
+
+    public static void init() {
+        if (connect() != null) {
+            for (HasId hasId : tablesObjects) {
+                if (!checkTableExists(hasId)) {
+                    createTable(hasId);
+                }
+            }
+        }
     }
     /*
-    * Drop all tables and recreate them
-    *
-    */
-    public static void clear(){
+     * Drop all tables and recreate them
+     *
+     */
+
+    public static void clear() {
         connect();
-        for (HasId hasId:tablesObjects){
-              dropTable( hasId);
-             if (!checkTableExists(hasId)){
-                 createTable(hasId);
-            } 
-        }  
+        for (HasId hasId : tablesObjects) {
+            dropTable(hasId);
+            if (!checkTableExists(hasId)) {
+                createTable(hasId);
+            }
+        }
     }
-    public static void close() throws SQLException{
+
+    public static void close() throws SQLException {
         connection.close();
     }
+
     public static int getId(Object hasId) throws SQLException {
-        
+
         int result;
         Statement stmt = null;
         String sql = "";
-        ResultSet rs=null;
+        ResultSet rs = null;
         try {
             stmt = connection.createStatement();
-            sql = "SELECT  MAX(id) FROM  "+hasId.getClass().getSimpleName();
-             Logger.getLogger(DataPiece.class.getName()).log(Level.INFO, "get new id "+sql);
-            rs = stmt.executeQuery( sql);
-          
-            if (rs!=null && rs.next() ){
-                  Logger.getLogger(DataPiece.class.getName()).log(Level.INFO, "found id "+rs.getInt(1));
-                result= rs.getInt(1)+1;
-            }else{
-                      Logger.getLogger(DataPiece.class.getName()).log(Level.INFO, "get new id : not result so set to 1");
-                 result= 1;
-            }
-            Logger.getLogger(DataPiece.class.getName()).log(Level.INFO, "id is "+result);
+            sql = "SELECT  MAX(id) FROM  " + hasId.getClass().getSimpleName();
+            Logger.getLogger(DataPiece.class.getName()).log(Level.INFO, "get new id " + sql);
+            rs = stmt.executeQuery(sql);
 
-        }catch (SQLException ex) {
-             Logger.getLogger(DataPiece.class.getName()).log(Level.INFO, "Exception in getID "+ex.getMessage());
-             result= 1;
+            if (rs != null && rs.next()) {
+                Logger.getLogger(DataPiece.class.getName()).log(Level.INFO, "found id " + rs.getInt(1));
+                result = rs.getInt(1) + 1;
+            } else {
+                Logger.getLogger(DataPiece.class.getName()).log(Level.INFO, "get new id : not result so set to 1");
+                result = 1;
+            }
+            Logger.getLogger(DataPiece.class.getName()).log(Level.INFO, "id is " + result);
+
+        } catch (SQLException ex) {
+            Logger.getLogger(DataPiece.class.getName()).log(Level.INFO, "Exception in getID " + ex.getMessage());
+            result = 1;
         } finally {
-           close( stmt,  rs);
+            close(stmt, rs);
         }
-       return result;
+        return result;
     }
-    
-    static void  close(Statement stmt, ResultSet rs){
-        try {stmt.close();} catch (Exception e) { /* ignored */ }
-        try {rs.close();} catch (Exception e) { /* ignored */ } 
+
+    static void close(Statement stmt, ResultSet rs) {
+        try {
+            stmt.close();
+        } catch (Exception e) { /* ignored */ }
+        try {
+            rs.close();
+        } catch (Exception e) { /* ignored */ }
     }
-    
 
     public static boolean dropTable(Object hasId) {
         String sql = "";
@@ -115,7 +127,7 @@ public class DBUtils {
             Logger.getLogger(DataPiece.class.getName()).log(Level.SEVERE, sql + ex.getMessage());
             result = false;
         } finally {
-           close( stmt,  null);
+            close(stmt, null);
         }
 
         return result;
@@ -143,8 +155,8 @@ public class DBUtils {
                     sql += ", " + name + " REAL    NOT NULL ";
                 } else if (field.getType().isAssignableFrom(double.class)) {
                     sql += ", " + name + " REAL    NOT NULL ";
-                } else if (isHasId( field)) {
-                    sql += ", " + name + "_id"+ " INT    NOT NULL ";
+                } else if (isHasId(field)) {
+                    sql += ", " + name + "_id" + " INT    NOT NULL ";
                 }
             }
             sql += ");";
@@ -155,7 +167,7 @@ public class DBUtils {
             Logger.getLogger(DataPiece.class.getName()).log(Level.SEVERE, sql + ex.getMessage());
             result = false;
         } finally {
-            close( stmt,  null);
+            close(stmt, null);
         }
         return result;
     }
@@ -165,11 +177,11 @@ public class DBUtils {
         boolean result;
         Statement stmt = null;
         try {
-            
-            if (hasId.getId()==0){
+
+            if (hasId.getId() == 0) {
                 hasId.setId();
             }
-            
+
             stmt = connection.createStatement();
             sql = "INSERT INTO " + hasId.getClass().getSimpleName() + " VALUES (" + hasId.getId();
             for (Field field : hasId.getClass().getFields()) {
@@ -188,7 +200,7 @@ public class DBUtils {
                     sql += ", " + (float) field.get(hasId) + "";
                 } else if (field.getType().isAssignableFrom(double.class)) {
                     sql += ", " + (double) field.get(hasId) + "";
-                } else if (isHasId( field)) {
+                } else if (isHasId(field)) {
                     sql += ", " + ((HasId) field.get(hasId)).getId() + "";
                 }
             }
@@ -208,7 +220,7 @@ public class DBUtils {
             Logger.getLogger(DataPiece.class.getName()).log(Level.SEVERE, ex.getMessage() + "on " + sql);
             result = false;
         } finally {
-            close( stmt,  null);
+            close(stmt, null);
         }
         return result;
     }
@@ -234,7 +246,7 @@ public class DBUtils {
                     sql += ", " + name + " = " + (float) field.get(hasId) + " ";
                 } else if (field.getType().isAssignableFrom(double.class)) {
                     sql += ", " + name + " = " + (double) field.get(hasId) + " ";
-                } else if (isHasId( field)) {
+                } else if (isHasId(field)) {
                     sql += ", " + name + "_id " + "= " + ((HasId) field.get(hasId)).getId() + " ";
                 } else {
                     Logger.getLogger(DataPiece.class.getName()).log(Level.SEVERE, name + " type not found");
@@ -251,117 +263,118 @@ public class DBUtils {
             Logger.getLogger(DataPiece.class.getName()).log(Level.SEVERE, sql + ex.getMessage());
             result = false;
         } finally {
-             close( stmt,  null);
+            close(stmt, null);
         }
         return result;
     }
-  
-    public static HasId loadFromDB(HasId hasId, Field field ) throws Exception{
-         boolean result = false;
-        Statement stmt = null;
-        String sql;
-        ResultSet rs=null;
-        try {
-            stmt = connection.createStatement();
-            sql = "SELECT  * from " + hasId.getClass().getSimpleName() + " where "+field.getName()+"='" + (String) field.get(hasId) + "'";
-            Logger.getLogger(DataPiece.class.getName()).log(Level.INFO, sql);
-            rs = stmt.executeQuery(sql);
-            if (rs.next()) {
-                setHasId( hasId, rs); 
-            }  
-         } catch (IllegalAccessException ex) {
-            throw (ex) ;   
 
-        } catch (SQLException ex) {
-            throw (ex) ; 
-
-        } finally {
-            close(stmt,rs);
-        }
-        return hasId;
-    }
-    
-    public static boolean loadFromDB(HasId hasId, int id) throws Exception{
+    public static HasId loadFromDB(HasId hasId, Field field) throws Exception {
         boolean result = false;
         Statement stmt = null;
         String sql;
-        ResultSet rs=null;
+        ResultSet rs = null;
+        try {
+            stmt = connection.createStatement();
+            sql = "SELECT  * from " + hasId.getClass().getSimpleName() + " where " + field.getName() + "='" + (String) field.get(hasId) + "'";
+            Logger.getLogger(DataPiece.class.getName()).log(Level.INFO, sql);
+            rs = stmt.executeQuery(sql);
+            if (rs.next()) {
+                setHasId(hasId, rs);
+            }
+        } catch (IllegalAccessException ex) {
+            throw (ex);
+
+        } catch (SQLException ex) {
+            throw (ex);
+
+        } finally {
+            close(stmt, rs);
+        }
+        return hasId;
+    }
+
+    public static boolean loadFromDB(HasId hasId, int id) throws Exception {
+        boolean result = false;
+        Statement stmt = null;
+        String sql;
+        ResultSet rs = null;
         try {
             stmt = connection.createStatement();
             sql = "SELECT  * from " + hasId.getClass().getSimpleName() + " where ID='" + id + "'";
             Logger.getLogger(DataPiece.class.getName()).log(Level.INFO, sql);
             rs = stmt.executeQuery(sql);
-      
+
             if (rs.next()) {
-                setHasId( hasId, rs) ;
-            
-                result=true;
-            }else{
+                setHasId(hasId, rs);
+
+                result = true;
+            } else {
                 Logger.getLogger(HasId.class.getName()).log(Level.INFO, "No row found ");
-                throw (new SQLException()) ;   
+                throw (new SQLException());
             }
 
         } catch (IllegalAccessException ex) {
-             Logger.getLogger(DBUtils.class.getName()).log(Level.INFO, null,"Illegal" +ex);
-            throw (ex) ;   
+            Logger.getLogger(DBUtils.class.getName()).log(Level.INFO, null, "Illegal" + ex);
+            throw (ex);
         } catch (InstantiationException ex) {
-             Logger.getLogger(HasId.class.getName()).log(Level.INFO, null,"Instanciation "+ex);
-            throw (ex) ;   
+            Logger.getLogger(HasId.class.getName()).log(Level.INFO, null, "Instanciation " + ex);
+            throw (ex);
         } catch (SQLException ex) {
-                    Logger.getLogger(HasId.class.getName()).log(Level.INFO, null,"SQL "+ex);
-            throw (ex) ; 
+            Logger.getLogger(HasId.class.getName()).log(Level.INFO, null, "SQL " + ex);
+            throw (ex);
 
         } finally {
-            close(stmt,rs);
+            close(stmt, rs);
         }
 
         return result;
 
     }
 
-    static void setHasId(HasId hasId,ResultSet rs) throws IllegalAccessException,SQLException, InstantiationException, Exception {
-         for (Field field : hasId.getClass().getFields()) {
+    static void setHasId(HasId hasId, ResultSet rs) throws IllegalAccessException, SQLException, InstantiationException, Exception {
+        for (Field field : hasId.getClass().getFields()) {
 
-                    String name = field.getName();
-                    if (field.getType().isAssignableFrom(String.class)) {
-                           Logger.getLogger(HasId.class.getName()).log(Level.INFO, "Set "+name+" "+rs.getString(name));
-                        field.set(hasId, rs.getString(name));
-                    } else if (field.getType().isAssignableFrom(int.class)) {
-                        Logger.getLogger(HasId.class.getName()).log(Level.INFO, "Set "+name+" "+rs.getString(name));
-                        field.set(hasId, rs.getInt(name));
-                    } else if (field.getType().isAssignableFrom(float.class)) {
-                        Logger.getLogger(HasId.class.getName()).log(Level.INFO, "Set "+name+" "+rs.getString(name));
-                        field.set(hasId, rs.getFloat(name));
-                    } else if (field.getType().isAssignableFrom(double.class)) {
-                        Logger.getLogger(HasId.class.getName()).log(Level.INFO, "Set "+name+" "+rs.getString(name));
-                        field.set(hasId, rs.getDouble(name));
-                    } else if ( isHasId( field)){
-                         Logger.getLogger(DBUtils.class.getName()).log(Level.WARNING, "**** Found hasChild  ");
-                        if (!buildChild( hasId,  field, rs)){
-                            Logger.getLogger(DBUtils.class.getName()).log(Level.WARNING, "**** Was not able to build child for  ");
-                        }
-                    }else{
-                        Logger.getLogger(DBUtils.class.getName()).log(Level.WARNING, "**** Cannot set anything for  "+name+" "+field.getType().getName());
-   
-                    }
+            String name = field.getName();
+            if (field.getType().isAssignableFrom(String.class)) {
+                Logger.getLogger(HasId.class.getName()).log(Level.INFO, "Set " + name + " " + rs.getString(name));
+                field.set(hasId, rs.getString(name));
+            } else if (field.getType().isAssignableFrom(int.class)) {
+                Logger.getLogger(HasId.class.getName()).log(Level.INFO, "Set " + name + " " + rs.getString(name));
+                field.set(hasId, rs.getInt(name));
+            } else if (field.getType().isAssignableFrom(float.class)) {
+                Logger.getLogger(HasId.class.getName()).log(Level.INFO, "Set " + name + " " + rs.getString(name));
+                field.set(hasId, rs.getFloat(name));
+            } else if (field.getType().isAssignableFrom(double.class)) {
+                Logger.getLogger(HasId.class.getName()).log(Level.INFO, "Set " + name + " " + rs.getString(name));
+                field.set(hasId, rs.getDouble(name));
+            } else if (isHasId(field)) {
+                Logger.getLogger(DBUtils.class.getName()).log(Level.WARNING, "**** Found hasChild  ");
+                if (!buildChild(hasId, field, rs)) {
+                    Logger.getLogger(DBUtils.class.getName()).log(Level.WARNING, "**** Was not able to build child for  ");
                 }
+            } else {
+                Logger.getLogger(DBUtils.class.getName()).log(Level.WARNING, "**** Cannot set anything for  " + name + " " + field.getType().getName());
+
+            }
+        }
     }
-    
+
     static boolean isHasId(Field field) {
         Type[] interfaces = field.getType().getInterfaces();
         boolean found = false;
         if (interfaces.length != 0) {
             for (Type val : interfaces) {
-             
+
                 if (val.toString().equals("interface cms_sio.model.generic.HasId")) {
-                     Logger.getLogger(DBUtils.class.getName()).log(Level.WARNING, "****** " + field + " interface of  " + val.toString());
+                    Logger.getLogger(DBUtils.class.getName()).log(Level.WARNING, "****** " + field + " interface of  " + val.toString());
                     return true;
                 }
             }
         }
         return false;
     }
-    static boolean buildChild(HasId hasId, Field field,ResultSet rs) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, SQLException {
+
+    static boolean buildChild(HasId hasId, Field field, ResultSet rs) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, SQLException {
         boolean found = false;
         Constructor[] allConstructors = field.getType().getDeclaredConstructors();
         for (Constructor ctor : allConstructors) {
@@ -378,34 +391,55 @@ public class DBUtils {
         }
         return false;
     }
-    
+
     public static boolean updateDB(HasId hasId) {
 
-            boolean row_exists = checkRowExists(hasId);
-            if (!row_exists) {
-                
-                return insertRow(hasId);
-            } else {
+        boolean row_exists = checkRowExists(hasId);
+        if (!row_exists) {
 
-                return updateRow(hasId);
+            return insertRow(hasId);
+        } else {
+
+            return updateRow(hasId);
+        }
+
+    }
+
+    public static Connection connect(String dataPath) {
+        if (connection != null) {
+            try {
+                connection.close();
+            } catch (Exception e) {;
             }
-
+        }
+        connection = null;
+        databasePath = dataPath;
+        return connect();
 
     }
 
     public static Connection connect() {
-        if (connection != null) {
-            return connection;
-        } else {
-            try {
-                connection = DriverManager.getConnection("jdbc:sqlite:/Users//alvin.jeremie/Desktop/BaseDeDonnéeCms/maBase.db");
+        try {
+            if (connection != null) {
+                return connection;
+            } else if (databasePath != null) {
+                connection = DriverManager.getConnection("jdbc:sqlite:/" + databasePath);
                 return connection;
 
-            } catch (SQLException ex) {
-                Logger.getLogger(HasId.class.getName()).log(Level.SEVERE, null, ex);
-                return null;
+            } else {
+                File file = new File(DATABASE_FILE);
+                FileReader fileReader = new FileReader(file);
+                BufferedReader buffereReader=new BufferedReader(fileReader);
+                databasePath=buffereReader.readLine();
+                if (databasePath!=null){
+                    return connect();
+                }
+                
             }
+        } catch (Exception ex) {
+            return null;
         }
+        return null;
 
     }
 
@@ -423,7 +457,7 @@ public class DBUtils {
             Logger.getLogger(DataPiece.class.getName()).log(Level.SEVERE, null, ex);
             result = false;
         } finally {
-             close( stmt,  null);
+            close(stmt, null);
         }
 
         return result;
@@ -446,7 +480,7 @@ public class DBUtils {
             Logger.getLogger(DataPiece.class.getName()).log(Level.WARNING, sql + ex);
             result = false;
         } finally {
-            close( stmt,  rs);
+            close(stmt, rs);
         }
 
         return result;
