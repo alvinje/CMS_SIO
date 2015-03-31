@@ -18,7 +18,7 @@ import java.sql.SQLException;
 public class Template implements HasId{
     public String name="";
     public String pathOrigin="";
-    public Configuration configuration;
+    public TemplateConfiguration templateConfiguration;
     public int id;
     
     
@@ -48,7 +48,7 @@ public class Template implements HasId{
 
     @Override
     public boolean save() {
-        return configuration.save()&& DBUtils.updateDB(this);
+        return templateConfiguration.save()&& DBUtils.updateDB(this);
     }
     
     @Override
@@ -92,15 +92,15 @@ public class Template implements HasId{
     /**
      * @return the configuration
      */
-    public Configuration getConfiguration() {
-        return configuration;
+    public TemplateConfiguration getConfiguration() {
+        return templateConfiguration;
     }
 
     /**
      * @param configuration the configuration to set
      */
-    public void setConfiguration(Configuration configuration) {
-        this.configuration = configuration;
+    public void setConfiguration(TemplateConfiguration configuration) {
+        this.templateConfiguration = configuration;
     }
 
  

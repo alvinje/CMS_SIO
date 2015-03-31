@@ -15,24 +15,24 @@ import java.util.List;
  *
  * @author sgoyet
  */
-public class Configuration implements HasId{
+public class TemplateConfiguration implements HasId{
     public int id;
-    List<VariableElement> variableElements=new ArrayList<VariableElement>();
-    public String variableElementsIds;
+    List<TemplateVariableElement> templateVariableElement=new ArrayList<TemplateVariableElement>();
+    public String templateVariableElementsIds;
 
-   public Configuration(){
+   public TemplateConfiguration(){
        
    }
-   public Configuration(int id)  throws Exception{
+   public TemplateConfiguration(int id)  throws Exception{
      loadFromDB( id);
    }
    
     @Override
     public HasId loadFromDB(int id) throws Exception {
       DBUtils.loadFromDB(this, id);
-      String[] ids=variableElementsIds.split("_");
+      String[] ids=templateVariableElementsIds.split("_");
       for (String id_:ids){
-          variableElements.add(new VariableElement(Integer.parseInt(id_)));
+          templateVariableElement.add(new TemplateVariableElement(Integer.parseInt(id_)));
       }
       return this;
     }
@@ -40,7 +40,7 @@ public class Configuration implements HasId{
     @Override
     public boolean save() {
         boolean result=true;
-        for (VariableElement variableElement:variableElements){
+        for (TemplateVariableElement variableElement:templateVariableElement){
             result=result & variableElement.save();
             if (!result){
                 break;
@@ -63,29 +63,29 @@ public class Configuration implements HasId{
     public int getId() {
         return id;    
     }
-    public void addVariableElement(VariableElement variableElement){
-        variableElements.add(variableElement);
+    public void addVariableElement(TemplateVariableElement variableElement){
+        templateVariableElement.add(variableElement);
         buildvariableElementsIds();
     }
-    public void removeVariableElement(VariableElement variableElement){
-        variableElements.remove(variableElement);
+    public void removeVariableElement(TemplateVariableElement variableElement){
+        templateVariableElement.remove(variableElement);
         buildvariableElementsIds();
     }
    
-    public void clear(VariableElement variableElement){
-        variableElements.clear();
+    public void clear(TemplateVariableElement variableElement){
+        templateVariableElement.clear();
         buildvariableElementsIds();
     }
     
     void buildvariableElementsIds(){
         StringBuffer buffer=new StringBuffer();
-        for (VariableElement variableElement:variableElements){
+        for (TemplateVariableElement variableElement:templateVariableElement){
             buffer.append(variableElement.id).append("_");
         }
         if (buffer.length()>0){
             buffer.setLength(buffer.length()-1);
         }
-        variableElementsIds=buffer.toString();
+        templateVariableElementsIds=buffer.toString();
     }
 
 

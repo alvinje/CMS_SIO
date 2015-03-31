@@ -5,7 +5,7 @@
  */
 package cms_sio.controllers;
 
-import cms_sio.model.Setting;
+import cms_sio.model.ApplicationSetting;
 import cms_sio.model.generic.database.DBUtils;
 import java.io.IOException;
 import java.net.URL;
@@ -33,7 +33,7 @@ public class SettingsViewController implements Initializable {
     
     String[] propertyNames = new String[]{HTTP_SERVEUR_URL, DATA_PATH, DATABASE_PATH};
     
-    List<Setting> setting = new ArrayList<Setting>();
+    List<ApplicationSetting> setting = new ArrayList<ApplicationSetting>();
     @FXML
     private GridPane gridPane;
 
@@ -44,10 +44,10 @@ public class SettingsViewController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         int i = 0;
         for (String name : propertyNames) {
-            Setting setting = new Setting(name);
+            ApplicationSetting setting = new ApplicationSetting(name);
             
             try {
-                setting = (Setting) DBUtils.loadFromDB(setting, setting.getClass().getField("name"));
+                setting = (ApplicationSetting) DBUtils.loadFromDB(setting, setting.getClass().getField("name"));
                 
             } catch (Exception ex) {
                 Logger.getLogger(SettingsViewController.class.getName()).log(Level.INFO, null, "databasePath non configuré");

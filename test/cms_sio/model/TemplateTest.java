@@ -25,12 +25,12 @@ public class TemplateTest {
     
     @BeforeClass
     public static void setUpClass() {
-        DBUtils.clear();
+        DBUtils.clearAllTables();
     }
     
     @AfterClass
     public static void tearDownClass() throws SQLException {
-         DBUtils.close();
+         DBUtils.disconnect();
     }
     
     @Before
@@ -51,18 +51,18 @@ public class TemplateTest {
         Template template = new Template();
         template.setName("template_test");
         template.setPathOrigin("/bla");
-        Configuration configuration =new Configuration();
+        TemplateConfiguration configuration =new TemplateConfiguration();
         
-        VariableElement variableElement_1=new VariableElement(
-                            ConfigurationType.TEXT.toString(),
+        TemplateVariableElement variableElement_1=new TemplateVariableElement(
+                            ElementType.TEXT.toString(),
                             Multiplicity._1.toString(),
                             "id_title");
         
         
         DBUtils.updateDB(variableElement_1);
         
-        VariableElement variableElement_2=new VariableElement(
-                            ConfigurationType.DataUrl.toString(),
+        TemplateVariableElement variableElement_2=new TemplateVariableElement(
+                            ElementType.DataUrl.toString(),
                             Multiplicity._1.toString(),
                             "id_image_centrale");
         
@@ -87,10 +87,10 @@ public class TemplateTest {
         
         assertTrue(null !=template_test.getConfiguration() );
           
-        assertTrue( template_test.getConfiguration().variableElements.size()==2);
+        assertTrue( template_test.getConfiguration().templateVariableElement.size()==2);
       
-       assertTrue(template_test.getConfiguration().variableElements.get(0).getElement_id().equals("id_title"));
-       assertTrue(template_test.getConfiguration().variableElements.get(1).getElement_id().equals("id_image_centrale"));
+       assertTrue(template_test.getConfiguration().templateVariableElement.get(0).getElementId().equals("id_title"));
+       assertTrue(template_test.getConfiguration().templateVariableElement.get(1).getElementId().equals("id_image_centrale"));
         
     }
   
@@ -99,18 +99,18 @@ public class TemplateTest {
         Template template = new Template();
         template.setName("template_test_1");
         template.setPathOrigin("/bla_1");
-        Configuration configuration =new Configuration();
+        TemplateConfiguration configuration =new TemplateConfiguration();
         
-        VariableElement variableElement_1=new VariableElement(
-                            ConfigurationType.TEXT.toString(),
+        TemplateVariableElement variableElement_1=new TemplateVariableElement(
+                            ElementType.TEXT.toString(),
                             Multiplicity._1.toString(),
                             "id_title_1");
         
         
         DBUtils.updateDB(variableElement_1);
         
-        VariableElement variableElement_2=new VariableElement(
-                            ConfigurationType.DataUrl.toString(),
+        TemplateVariableElement variableElement_2=new TemplateVariableElement(
+                            ElementType.DataUrl.toString(),
                             Multiplicity._1.toString(),
                             "id_image_centrale_1");
         
@@ -132,10 +132,10 @@ public class TemplateTest {
         
         assertTrue(null !=template_test.getConfiguration() );
           
-        assertTrue( template_test.getConfiguration().variableElements.size()==2);
+        assertTrue( template_test.getConfiguration().templateVariableElement.size()==2);
       
-       assertTrue(template_test.getConfiguration().variableElements.get(0).getElement_id().equals("id_title_1"));
-       assertTrue(template_test.getConfiguration().variableElements.get(1).getElement_id().equals("id_image_centrale_1"));
+       assertTrue(template_test.getConfiguration().templateVariableElement.get(0).getElementId().equals("id_title_1"));
+       assertTrue(template_test.getConfiguration().templateVariableElement.get(1).getElementId().equals("id_image_centrale_1"));
         
         
     }

@@ -5,7 +5,7 @@
  */
 package cms_sio.controllers;
 
-import cms_sio.model.Setting;
+import cms_sio.model.ApplicationSetting;
 import cms_sio.model.generic.database.DBUtils;
 import cms_sio.view.Toast;
 import java.io.BufferedWriter;
@@ -39,7 +39,7 @@ import javafx.util.Duration;
  */
 public class SettingViewController extends SettingDatabasePathController implements Initializable {
 
-    Setting setting;
+    ApplicationSetting setting;
     @FXML
     private GridPane gridPane;
     String property;
@@ -47,7 +47,7 @@ public class SettingViewController extends SettingDatabasePathController impleme
     TextField propertyURL;
     Button validationPropertyURL;
 
-    public void setData(Setting setting) {
+    public void setData(ApplicationSetting setting) {
         this.setting = setting;
         gridPane.add(new Label(setting.getName()), 0, 0);
         property = setting.getProperty();

@@ -13,21 +13,21 @@ import java.sql.SQLException;
  *
  * @author sgoyet
  */
-public class DataPiece implements HasId {
-
-    VariableElement variableElement;
-    String content="";
+public class PageData implements HasId{
+    public Template template;
     public int id;
-    public DataPiece() {
+    public PageData(){
+        
     }
-    public DataPiece(VariableElement variableElement,String content) {
-        this.variableElement=variableElement;
-        this.content=content;
-    }   
-    public DataPiece(int id)  throws Exception{
-          loadFromDB( id);
+    public PageData(int id)  throws Exception{
+      loadFromDB( id) ;
     }
-   @Override
+     @Override
+    public int getId() {
+        return id;    
+    }
+
+    @Override
     public HasId loadFromDB(int id) throws Exception {
       DBUtils.loadFromDB(this, id);
       return this;
@@ -35,22 +35,15 @@ public class DataPiece implements HasId {
 
     @Override
     public boolean save() {
-        return DBUtils.updateDB(this);
+        if (template.save()){
+               return DBUtils.updateDB(this); 
+        }else{
+            return false;
+        }
     }
     
-
-    @Override
-    public int getId() {
-        return id;    
-    }
-
     @Override
     public void setId() throws SQLException {
         id=DBUtils.getId(this);
     }
-
-
-
-
-
 }

@@ -9,50 +9,54 @@ import cms_sio.model.generic.HasId;
 import cms_sio.model.generic.database.DBUtils;
 import java.sql.SQLException;
 
-
 /**
  *
  * @author sgoyet
  */
-public class Setting implements HasId{
+public class ApplicationSetting implements HasId {
+
     public int id;
     public String name;
     public String property;
-    public Setting(){
-        
+
+    public ApplicationSetting() {
+
     }
-    public Setting(String name){
-        this.name=name;
-        property="";
+
+    public ApplicationSetting(String name) {
+        this.name = name;
+        property = "";
     }
-         
-    public Setting(String name, String property)  {
-      this.name=name;
-      this.property=property;
+
+    public ApplicationSetting(String name, String property) {
+        this.name = name;
+        this.property = property;
     }
-     
-    public Setting(int id)  throws Exception{
-       DBUtils.loadFromDB(this, id);
+
+    public ApplicationSetting(int id) throws Exception {
+        DBUtils.loadFromDB(this, id);
     }
-    
-    
+
     @Override
     public HasId loadFromDB(int id) throws Exception {
-      DBUtils.loadFromDB(this, id);
-      return this;
+        DBUtils.loadFromDB(this, id);
+        return this;
     }
 
     @Override
     public boolean save() {
-        return DBUtils.updateDB(this); 
+        return DBUtils.updateDB(this);
     }
+
     @Override
     public int getId() {
-    return id;    }
+        return id;
+    }
 
     @Override
     public void setId() throws SQLException {
-        setId(DBUtils.getId(this));   }
+        setId(DBUtils.getId(this));
+    }
 
     /**
      * @param id the id to set
@@ -89,6 +93,4 @@ public class Setting implements HasId{
         this.property = property;
     }
 
-   
-    
 }

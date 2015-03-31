@@ -13,20 +13,20 @@ import java.sql.SQLException;
  *
  * @author sgoyet
  */
-public class VariableElement implements HasId{
-    public String configurationType;
+public class TemplateVariableElement implements HasId{
+    public String elementType;
     public String multiplicity;
-    public String element_id;
+    public String elementId;
     public int id;
     
-    public VariableElement() {
+    public TemplateVariableElement() {
     }
-    public VariableElement(String configurationType,String mulitplicity,String element_id) {
-        this.configurationType=configurationType;
+    public TemplateVariableElement(String elementType,String mulitplicity,String elementId) {
+        this.elementType=elementType;
         this.multiplicity=mulitplicity;
-        this.element_id=element_id;
+        this.elementId=elementId;
     }
-    public VariableElement(int id)  throws Exception{
+    public TemplateVariableElement(int id)  throws Exception{
        loadFromDB( id) ;
     }
     
@@ -51,46 +51,34 @@ public class VariableElement implements HasId{
         id=DBUtils.getId(this);
     }
 
-    /**
-     * @return the configurationType
-     */
-    public String getConfigurationType() {
-        return configurationType;
+
+    public String getElementType() {
+        return elementType;
     }
 
-    /**
-     * @param configurationType the configurationType to set
-     */
-    public void setConfigurationType(String configurationType) {
-        this.configurationType = configurationType;
+
+    public void setElementType(String elementType) {
+        this.elementType = elementType;
     }
 
-    /**
-     * @return the multiplicity
-     */
+
     public String getMultiplicity() {
         return multiplicity;
     }
 
-    /**
-     * @param multiplicity the multiplicity to set
-     */
+
     public void setMultiplicity(String multiplicity) {
         this.multiplicity = multiplicity;
     }
 
-    /**
-     * @return the element_id
-     */
-    public String getElement_id() {
-        return element_id;
+
+    public String getElementId() {
+        return elementId;
     }
 
-    /**
-     * @param element_id the element_id to set
-     */
-    public void setElement_id(String element_id) {
-        this.element_id = element_id;
+
+    public void setElementId(String element_id) {
+        this.elementId = element_id;
     }
 
     

@@ -28,12 +28,12 @@ public class VariableElementTest {
 
     @BeforeClass
     public static void setUpClass() {
-        DBUtils.init();
+        DBUtils.createAllTables();
     }
 
     @AfterClass
     public static void tearDownClass() throws SQLException {
-        DBUtils.close();
+        DBUtils.disconnect();
     }
 
     @Before
@@ -49,8 +49,8 @@ public class VariableElementTest {
     @Test
     public void testDrop() {
 
-        VariableElement variableElement = new VariableElement();
-        Logger.getLogger(DataPiece.class.getName()).log(Level.INFO, "Do drop");
+        TemplateVariableElement variableElement = new TemplateVariableElement();
+        Logger.getLogger(PageDataElement.class.getName()).log(Level.INFO, "Do drop");
         DBUtils.dropTable(variableElement);
         assertFalse(DBUtils.checkTableExists(variableElement));
     }
@@ -58,61 +58,61 @@ public class VariableElementTest {
     @Test
     public void testCreation() {
 
-        VariableElement variableElement = new VariableElement();
-        Logger.getLogger(DataPiece.class.getName()).log(Level.INFO, "Do create");
+        TemplateVariableElement variableElement = new TemplateVariableElement();
+        Logger.getLogger(PageDataElement.class.getName()).log(Level.INFO, "Do create");
         assertTrue(DBUtils.createTable(variableElement));
-        Logger.getLogger(DataPiece.class.getName()).log(Level.INFO, "Do check table");
+        Logger.getLogger(PageDataElement.class.getName()).log(Level.INFO, "Do check table");
         assertTrue(DBUtils.checkTableExists(variableElement));
     }
 
     @Test
     public void testUpdate() {
 
-        VariableElement variableElement = new VariableElement();
+        TemplateVariableElement variableElement = new TemplateVariableElement();
         
         //Drop first
         DBUtils.dropTable(variableElement);
-        Logger.getLogger(DataPiece.class.getName()).log(Level.INFO, "Do create");
+        Logger.getLogger(PageDataElement.class.getName()).log(Level.INFO, "Do create");
         
          //Create table
         DBUtils.createTable(variableElement);
-        Logger.getLogger(DataPiece.class.getName()).log(Level.INFO, "Do check");
+        Logger.getLogger(PageDataElement.class.getName()).log(Level.INFO, "Do check");
         
         //Check table exist
         assertTrue(DBUtils.checkTableExists(variableElement));
 
         variableElement.setMultiplicity(Multiplicity._0_1.toString());
-        variableElement.setConfigurationType(ConfigurationType.DataUrl.toString());
-        Logger.getLogger(DataPiece.class.getName()).log(Level.INFO, "Do update");
+        variableElement.setElementType(ElementType.DataUrl.toString());
+        Logger.getLogger(PageDataElement.class.getName()).log(Level.INFO, "Do update");
         assertTrue(DBUtils.updateDB(variableElement));
     }
 
     @Test
     public void testLoad() throws Exception {
 
-        VariableElement variableElement = new VariableElement();
+        TemplateVariableElement variableElement = new TemplateVariableElement();
         DBUtils.dropTable(variableElement);
-        Logger.getLogger(DataPiece.class.getName()).log(Level.INFO, "Do create");
+        Logger.getLogger(PageDataElement.class.getName()).log(Level.INFO, "Do create");
         DBUtils.createTable(variableElement);
-        Logger.getLogger(DataPiece.class.getName()).log(Level.INFO, "Do check");
+        Logger.getLogger(PageDataElement.class.getName()).log(Level.INFO, "Do check");
         assertTrue(DBUtils.checkTableExists(variableElement));
 
         variableElement.setMultiplicity(Multiplicity._0_1.toString());
-        variableElement.setConfigurationType(ConfigurationType.DataUrl.toString());
-        Logger.getLogger(DataPiece.class.getName()).log(Level.INFO, "Do update DB");
+        variableElement.setElementType(ElementType.DataUrl.toString());
+        Logger.getLogger(PageDataElement.class.getName()).log(Level.INFO, "Do update DB");
         
         assertTrue(DBUtils.updateDB(variableElement));
 
-        Logger.getLogger(DataPiece.class.getName()).log(Level.INFO, "Build new Variable with id = "+variableElement.getId());
-        VariableElement variableElement_uploaded = new VariableElement(variableElement.getId());
+        Logger.getLogger(PageDataElement.class.getName()).log(Level.INFO, "Build new Variable with id = "+variableElement.getId());
+        TemplateVariableElement variableElement_uploaded = new TemplateVariableElement(variableElement.getId());
         
       
         
-        Logger.getLogger(DataPiece.class.getName()).log(Level.INFO, "Check id");
+        Logger.getLogger(PageDataElement.class.getName()).log(Level.INFO, "Check id");
         assertEquals(variableElement_uploaded.id, variableElement.id);
-        Logger.getLogger(DataPiece.class.getName()).log(Level.INFO, "Check conf type");
-        assertEquals(variableElement_uploaded.getConfigurationType(), variableElement.getConfigurationType());
-        Logger.getLogger(DataPiece.class.getName()).log(Level.INFO, "Check multiplicity "+variableElement_uploaded.getMultiplicity()+ " / "+variableElement.getMultiplicity());
+        Logger.getLogger(PageDataElement.class.getName()).log(Level.INFO, "Check conf type");
+        assertEquals(variableElement_uploaded.getElementType(), variableElement.getElementType());
+        Logger.getLogger(PageDataElement.class.getName()).log(Level.INFO, "Check multiplicity "+variableElement_uploaded.getMultiplicity()+ " / "+variableElement.getMultiplicity());
         
         
         assertEquals(variableElement_uploaded.getMultiplicity(), variableElement.getMultiplicity());

@@ -13,47 +13,45 @@ import java.sql.SQLException;
  *
  * @author sgoyet
  */
-public class Page implements HasId{
-    public String name; 
+public class Page implements HasId {
+
+    public String name;
     public String content;
     public Template template;
-    public Data data;
+    public PageData pageData;
     public int id;
-    
-    
+
     public Page() {
-     }
-    
-    public Page(int id)  throws Exception{
-         loadFromDB( id);
     }
 
-    public Page(String name)  throws Exception{
-        this.name=name;
-         DBUtils.loadFromDB(this, getClass().getField("name"));
+    public Page(int id) throws Exception {
+        loadFromDB(id);
     }
-     
+
+    public Page(String name) throws Exception {
+        this.name = name;
+        DBUtils.loadFromDB(this, getClass().getField("name"));
+    }
+
     @Override
     public HasId loadFromDB(int id) throws Exception {
-      DBUtils.loadFromDB(this, id);
-      return this;
+        DBUtils.loadFromDB(this, id);
+        return this;
     }
 
     @Override
     public boolean save() {
-        return  data.save() && DBUtils.updateDB(this);
+        return pageData.save() && DBUtils.updateDB(this);
     }
-      
-            
+
     @Override
     public int getId() {
-        return id;    
+        return id;
     }
 
-      @Override
+    @Override
     public void setId() throws SQLException {
-        id=DBUtils.getId(this);
+        id = DBUtils.getId(this);
     }
 
- 
 }

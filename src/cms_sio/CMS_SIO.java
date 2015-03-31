@@ -6,7 +6,7 @@
 package cms_sio;
 
 import cms_sio.controllers.SettingViewController;
-import cms_sio.model.Setting;
+import cms_sio.model.ApplicationSetting;
 import cms_sio.model.generic.database.DBUtils;
 import java.io.IOException;
 
@@ -29,7 +29,7 @@ import javafx.stage.Stage;
  * @author sgoyet
  */
 public class CMS_SIO extends Application {
-    private List<Setting> settings = new ArrayList<Setting>();
+    private List<ApplicationSetting> settings = new ArrayList<ApplicationSetting>();
    
 
     
@@ -59,7 +59,7 @@ public class CMS_SIO extends Application {
      }
     public void showSetting(Stage stage) throws IOException  {
         
-        DBUtils.init();
+        DBUtils.createAllTables();
         FXMLLoader fxmlLoader = new FXMLLoader();
         Pane myPane = (Pane) fxmlLoader.load(getClass().getResource("view/SettingsView.fxml"));
        

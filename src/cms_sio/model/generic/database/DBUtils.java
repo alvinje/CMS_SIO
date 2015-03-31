@@ -5,13 +5,13 @@
  */
 package cms_sio.model.generic.database;
 
-import cms_sio.model.Configuration;
-import cms_sio.model.Data;
-import cms_sio.model.DataPiece;
+import cms_sio.model.TemplateConfiguration;
+import cms_sio.model.PageData;
+import cms_sio.model.PageDataElement;
 import cms_sio.model.Page;
-import cms_sio.model.Setting;
+import cms_sio.model.ApplicationSetting;
 import cms_sio.model.Template;
-import cms_sio.model.VariableElement;
+import cms_sio.model.TemplateVariableElement;
 import cms_sio.model.generic.HasId;
 import java.io.BufferedReader;
 import java.io.File;
@@ -38,15 +38,15 @@ public class DBUtils {
 
     public static Connection connection;
     static HasId[] tablesObjects = new HasId[]{
-        new Configuration(),
-        new Data(),
-        new DataPiece(),
+        new TemplateConfiguration(),
+        new PageData(),
+        new PageDataElement(),
         new Page(),
-        new Setting(),
+        new ApplicationSetting(),
         new Template(),
-        new VariableElement()};
+        new TemplateVariableElement()};
 
-    public static void init() {
+    public static void createAllTables() {
         connect();
         for (HasId hasId : tablesObjects) {
 
@@ -60,7 +60,7 @@ public class DBUtils {
      *
      */
 
-    public static void clear() {
+    public static void clearAllTables() {
         connect();
         for (HasId hasId : tablesObjects) {
             dropTable(hasId);
@@ -70,7 +70,7 @@ public class DBUtils {
         }
     }
 
-    public static void close() throws SQLException {
+    public static void disconnect() throws SQLException {
         connection.close();
     }
 
@@ -83,28 +83,28 @@ public class DBUtils {
         try {
             stmt = connection.createStatement();
             sql = "SELECT  MAX(id) FROM  " + hasId.getClass().getSimpleName();
-            Logger.getLogger(DataPiece.class.getName()).log(Level.INFO, "get new id " + sql);
+            Logger.getLogger(PageDataElement.class.getName()).log(Level.INFO, "get new id " + sql);
             rs = stmt.executeQuery(sql);
 
             if (rs != null && rs.next()) {
-                Logger.getLogger(DataPiece.class.getName()).log(Level.INFO, "found id " + rs.getInt(1));
+                Logger.getLogger(PageDataElement.class.getName()).log(Level.INFO, "found id " + rs.getInt(1));
                 result = rs.getInt(1) + 1;
             } else {
-                Logger.getLogger(DataPiece.class.getName()).log(Level.INFO, "get new id : not result so set to 1");
+                Logger.getLogger(PageDataElement.class.getName()).log(Level.INFO, "get new id : not result so set to 1");
                 result = 1;
             }
-            Logger.getLogger(DataPiece.class.getName()).log(Level.INFO, "id is " + result);
+            Logger.getLogger(PageDataElement.class.getName()).log(Level.INFO, "id is " + result);
 
         } catch (SQLException ex) {
-            Logger.getLogger(DataPiece.class.getName()).log(Level.INFO, "Exception in getID " + ex.getMessage());
+            Logger.getLogger(PageDataElement.class.getName()).log(Level.INFO, "Exception in getID " + ex.getMessage());
             result = 1;
         } finally {
-            close(stmt, rs);
+            disconnect(stmt, rs);
         }
         return result;
     }
 
-    static void close(Statement stmt, ResultSet rs) {
+    static void disconnect(Statement stmt, ResultSet rs) {
         try {
             stmt.close();
         } catch (Exception e) { /* ignored */ }
@@ -123,10 +123,10 @@ public class DBUtils {
             stmt.executeUpdate(sql);
             result = true;
         } catch (SQLException ex) {
-            Logger.getLogger(DataPiece.class.getName()).log(Level.SEVERE, sql + ex.getMessage());
+            Logger.getLogger(PageDataElement.class.getName()).log(Level.SEVERE, sql + ex.getMessage());
             result = false;
         } finally {
-            close(stmt, null);
+            disconnect(stmt, null);
         }
 
         return result;
@@ -163,10 +163,10 @@ public class DBUtils {
             stmt.executeUpdate(sql);
             result = true;
         } catch (SQLException ex) {
-            Logger.getLogger(DataPiece.class.getName()).log(Level.SEVERE, sql + ex.getMessage());
+            Logger.getLogger(PageDataElement.class.getName()).log(Level.SEVERE, sql + ex.getMessage());
             result = false;
         } finally {
-            close(stmt, null);
+            disconnect(stmt, null);
         }
         return result;
     }
@@ -205,21 +205,21 @@ public class DBUtils {
             }
             sql += ");";
 
-            Logger.getLogger(DataPiece.class.getName()).log(Level.INFO, sql);
+            Logger.getLogger(PageDataElement.class.getName()).log(Level.INFO, sql);
 
             stmt.executeUpdate(sql);
 
             result = true;
         } catch (IllegalAccessException ex) {
 
-            Logger.getLogger(DataPiece.class.getName()).log(Level.SEVERE, ex.getMessage() + "on " + sql);
+            Logger.getLogger(PageDataElement.class.getName()).log(Level.SEVERE, ex.getMessage() + "on " + sql);
             result = false;
         } catch (SQLException ex) {
-            Logger.getLogger(DataPiece.class.getName()).log(Level.SEVERE, sql);
-            Logger.getLogger(DataPiece.class.getName()).log(Level.SEVERE, ex.getMessage() + "on " + sql);
+            Logger.getLogger(PageDataElement.class.getName()).log(Level.SEVERE, sql);
+            Logger.getLogger(PageDataElement.class.getName()).log(Level.SEVERE, ex.getMessage() + "on " + sql);
             result = false;
         } finally {
-            close(stmt, null);
+            disconnect(stmt, null);
         }
         return result;
     }
@@ -248,21 +248,21 @@ public class DBUtils {
                 } else if (isHasId(field)) {
                     sql += ", " + name + "_id " + "= " + ((HasId) field.get(hasId)).getId() + " ";
                 } else {
-                    Logger.getLogger(DataPiece.class.getName()).log(Level.SEVERE, name + " type not found");
+                    Logger.getLogger(PageDataElement.class.getName()).log(Level.SEVERE, name + " type not found");
                 }
             }
             sql += " WHERE ID = " + hasId.getId();
-            Logger.getLogger(DataPiece.class.getName()).log(Level.INFO, "Update " + sql);
+            Logger.getLogger(PageDataElement.class.getName()).log(Level.INFO, "Update " + sql);
             result = (stmt.executeUpdate(sql) == 1);
 
         } catch (IllegalAccessException ex) {
-            Logger.getLogger(DataPiece.class.getName()).log(Level.SEVERE, sql + ex.getMessage());
+            Logger.getLogger(PageDataElement.class.getName()).log(Level.SEVERE, sql + ex.getMessage());
             result = false;
         } catch (SQLException ex) {
-            Logger.getLogger(DataPiece.class.getName()).log(Level.SEVERE, sql + ex.getMessage());
+            Logger.getLogger(PageDataElement.class.getName()).log(Level.SEVERE, sql + ex.getMessage());
             result = false;
         } finally {
-            close(stmt, null);
+            disconnect(stmt, null);
         }
         return result;
     }
@@ -275,7 +275,7 @@ public class DBUtils {
         try {
             stmt = connection.createStatement();
             sql = "SELECT  * from " + hasId.getClass().getSimpleName() + " where " + field.getName() + "='" + (String) field.get(hasId) + "'";
-            Logger.getLogger(DataPiece.class.getName()).log(Level.INFO, sql);
+            Logger.getLogger(PageDataElement.class.getName()).log(Level.INFO, sql);
             rs = stmt.executeQuery(sql);
             if (rs.next()) {
                 setHasId(hasId, rs);
@@ -287,7 +287,7 @@ public class DBUtils {
             throw (ex);
 
         } finally {
-            close(stmt, rs);
+            disconnect(stmt, rs);
         }
         return hasId;
     }
@@ -300,7 +300,7 @@ public class DBUtils {
         try {
             stmt = connection.createStatement();
             sql = "SELECT  * from " + hasId.getClass().getSimpleName() + " where ID='" + id + "'";
-            Logger.getLogger(DataPiece.class.getName()).log(Level.INFO, sql);
+            Logger.getLogger(PageDataElement.class.getName()).log(Level.INFO, sql);
             rs = stmt.executeQuery(sql);
 
             if (rs.next()) {
@@ -323,7 +323,7 @@ public class DBUtils {
             throw (ex);
 
         } finally {
-            close(stmt, rs);
+            disconnect(stmt, rs);
         }
 
         return result;
@@ -449,10 +449,10 @@ public class DBUtils {
             result = rs.next();
 
         } catch (SQLException ex) {
-            Logger.getLogger(DataPiece.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(PageDataElement.class.getName()).log(Level.SEVERE, null, ex);
             result = false;
         } finally {
-            close(stmt, null);
+            disconnect(stmt, null);
         }
 
         return result;
@@ -467,15 +467,15 @@ public class DBUtils {
         try {
             stmt = connection.createStatement();
             sql = "SELECT id from " + hasId.getClass().getSimpleName() + " where id=" + hasId.getId() + ";";
-            Logger.getLogger(DataPiece.class.getName()).log(Level.INFO, sql);
+            Logger.getLogger(PageDataElement.class.getName()).log(Level.INFO, sql);
             rs = stmt.executeQuery(sql);
             result = rs.next();
         } catch (SQLException ex) {
 
-            Logger.getLogger(DataPiece.class.getName()).log(Level.WARNING, sql + ex);
+            Logger.getLogger(PageDataElement.class.getName()).log(Level.WARNING, sql + ex);
             result = false;
         } finally {
-            close(stmt, rs);
+            disconnect(stmt, rs);
         }
 
         return result;

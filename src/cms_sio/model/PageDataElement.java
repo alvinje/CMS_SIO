@@ -13,21 +13,21 @@ import java.sql.SQLException;
  *
  * @author sgoyet
  */
-public class Data implements HasId{
-    public Template template;
-    public int id;
-    public Data(){
-        
-    }
-    public Data(int id)  throws Exception{
-      loadFromDB( id) ;
-    }
-     @Override
-    public int getId() {
-        return id;    
-    }
+public class PageDataElement implements HasId {
 
-    @Override
+    TemplateVariableElement variableElement;
+    String content="";
+    public int id;
+    public PageDataElement() {
+    }
+    public PageDataElement(TemplateVariableElement variableElement,String content) {
+        this.variableElement=variableElement;
+        this.content=content;
+    }   
+    public PageDataElement(int id)  throws Exception{
+          loadFromDB( id);
+    }
+   @Override
     public HasId loadFromDB(int id) throws Exception {
       DBUtils.loadFromDB(this, id);
       return this;
@@ -35,15 +35,22 @@ public class Data implements HasId{
 
     @Override
     public boolean save() {
-        if (template.save()){
-               return DBUtils.updateDB(this); 
-        }else{
-            return false;
-        }
+        return DBUtils.updateDB(this);
     }
     
+
+    @Override
+    public int getId() {
+        return id;    
+    }
+
     @Override
     public void setId() throws SQLException {
         id=DBUtils.getId(this);
     }
+
+
+
+
+
 }
