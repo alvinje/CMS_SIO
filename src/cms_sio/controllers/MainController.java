@@ -41,7 +41,6 @@ public class MainController implements Initializable {
        
     }
     public void showConfiguration() throws IOException{
-        DBUtils.init();
         FXMLLoader fxmlLoader = new FXMLLoader();
         Pane myPane = (Pane) fxmlLoader.load(getClass().getResource("/cms_sio/view/SettingsView.fxml"));
         body.getChildren().clear();
@@ -51,13 +50,19 @@ public class MainController implements Initializable {
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-     
-        try {
+        if(DBUtils.connect()){
+            try{
             showTemplate();
-        } catch (IOException ex) {
-            Logger.getLogger(MainController.class.getName()).log(Level.SEVERE, null, ex);
-        }
-     
+            }catch(IOException ex){
+                Logger.getLogger(MainController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }else{
+            try{
+            showConfiguration();
+            }catch(IOException ex){
+                Logger.getLogger(MainController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }     
     }    
     
 }

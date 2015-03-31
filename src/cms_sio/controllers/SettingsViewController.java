@@ -7,6 +7,7 @@ package cms_sio.controllers;
 
 import cms_sio.model.Setting;
 import cms_sio.model.generic.database.DBUtils;
+import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -25,50 +26,63 @@ import javafx.scene.layout.Pane;
  * @author sgoyet
  */
 public class SettingsViewController implements Initializable {
-   public static final String DATA_PATH="dataPath";
-   public static final String DATABASE_PATH="databasePath";
-   public static final String HTTP_SERVEUR_URL="Serveur URL";
-   
-   String[] propertyNames=new String[]{HTTP_SERVEUR_URL,DATA_PATH,DATABASE_PATH};
-   
-   List<Setting> setting=new ArrayList<Setting>();
-   @FXML
+
+    public static final String DATA_PATH = "dataPath";
+    public static final String DATABASE_PATH = "databasePath";
+    public static final String HTTP_SERVEUR_URL = "Serveur URL";
+    
+    String[] propertyNames = new String[]{HTTP_SERVEUR_URL, DATA_PATH, DATABASE_PATH};
+    
+    List<Setting> setting = new ArrayList<Setting>();
+    @FXML
     private GridPane gridPane;
+
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        int i=0;
-        for (String name: propertyNames){
-            Setting setting=new Setting(name);
+        int i = 0;
+        for (String name : propertyNames) {
+            Setting setting = new Setting(name);
             
             try {
-                setting=(Setting) DBUtils.loadFromDB(setting , setting.getClass().getField("name" ) );
-                
-                FXMLLoader loader = new FXMLLoader(getClass().getResource( "/cms_sio/view/SettingView.fxml"));
-        
-                Pane myPane = (Pane) loader.load();
-             
-                SettingViewController settingViewController = (SettingViewController) loader.getController();
-                settingViewController.setData(setting);
-                if (gridPane==null){
-                 Logger.getLogger(SettingsViewController.class.getName()).log(Level.INFO, "root pan is null" );
-                }
-                if (gridPane.getChildren()==null){
-                 Logger.getLogger(SettingsViewController.class.getName()).log(Level.INFO, "root pan child is null" );
-                }
-                
-                gridPane.add(myPane, 0, i);
-                i++;
+                setting = (Setting) DBUtils.loadFromDB(setting, setting.getClass().getField("name"));
                 
             } catch (Exception ex) {
-                Logger.getLogger(SettingsViewController.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(SettingsViewController.class.getName()).log(Level.INFO, null, "databasePath non configuré");
+                setting.property="";
             }
-           
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/cms_sio/view/SettingView.fxml"));
+            Pane settingViewPane = null;
+            try {
+                settingViewPane = (Pane) loader.load();
+            } catch (IOException ex) {
+                Logger.getLogger(SettingsViewController.class.getName()).log(Level.SEVERE, "problème structurel");
+                System.exit(-1);
+            }
+            
+            if(name.equals(DATABASE_PATH) ){
+                SettingDatabasePathController settingDatabasePathController = (SettingDatabasePathController) loader.getController();
+                settingDatabasePathController.setData(setting);
+            }
+            else{
+                SettingViewController settingViewController = (SettingViewController) loader.getController();
+                settingViewController.setData(setting);
+            }
+            
+            if (gridPane == null) {
+                Logger.getLogger(SettingsViewController.class.getName()).log(Level.INFO, "root pan is null");
+            }
+            if (gridPane.getChildren() == null) {
+                Logger.getLogger(SettingsViewController.class.getName()).log(Level.INFO, "root pan child is null");
+            }
+            
+            gridPane.add(settingViewPane, 0, i);
+            i++;
             
         }
-
+        
     }    
     
 }

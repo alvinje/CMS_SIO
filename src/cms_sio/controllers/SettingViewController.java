@@ -8,7 +8,9 @@ package cms_sio.controllers;
 import cms_sio.model.Setting;
 import cms_sio.model.generic.database.DBUtils;
 import cms_sio.view.Toast;
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -30,13 +32,12 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
-
 /**
  * FXML Controller class
  *
  * @author sgoyet
  */
-public class SettingViewController implements Initializable {
+public class SettingViewController extends SettingDatabasePathController implements Initializable {
 
     Setting setting;
     @FXML
@@ -45,6 +46,7 @@ public class SettingViewController implements Initializable {
     Button propertyDirPath;
     TextField propertyURL;
     Button validationPropertyURL;
+
     public void setData(Setting setting) {
         this.setting = setting;
         gridPane.add(new Label(setting.getName()), 0, 0);
@@ -54,7 +56,8 @@ public class SettingViewController implements Initializable {
         }
         switch (setting.getName()) {
             case SettingsViewController.DATABASE_PATH:
-                setButtonForFile(property);
+                Logger.getLogger(getClass().getName()).log(Level.INFO, "case setButtonForDir");
+                setButtonForDir(property);
 
                 break;
             case SettingsViewController.DATA_PATH:
@@ -73,11 +76,13 @@ public class SettingViewController implements Initializable {
         propertyDirPath.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent e) {
+                Logger.getLogger(getClass().getName()).log(Level.INFO, "on vas dans handleButtonClickForDir");
                 handleButtonClickForDir(e);
             }
         });
         gridPane.add(propertyDirPath, 1, 0);
     }
+
     void setButtonForFile(String property) {
         propertyDirPath = new Button(property);
         propertyDirPath.setOnAction(new EventHandler<ActionEvent>() {
@@ -97,14 +102,34 @@ public class SettingViewController implements Initializable {
 
         if (file != null) {
             try {
-                property = file.getCanonicalPath();
-                propertyDirPath.setText(property);
-                SettingViewController.this.setting.setProperty(property);
-                if (DBUtils.updateDB(SettingViewController.this.setting)){
-                    alert("DB path validé");
+                if (setting.getName().equals(SettingsViewController.DATABASE_PATH)) {
+                    Logger.getLogger(getClass().getName()).log(Level.INFO, "on va fair un storeDataBasePath(file);");                  
+                    storeDataBasePath(file);
+                    if (DBUtils.connect()) {
+                        Logger.getLogger(getClass().getName()).log(Level.INFO, "on est dans le connect");
+                        property = file.getCanonicalPath();
+                        propertyDirPath.setText(property);
+                        Toast.makeText("OK", Toast.DURATION_SHORT);
+                        SettingViewController.this.setting.setProperty(property);
+                        
+                        if (DBUtils.updateDB(SettingViewController.this.setting)) {
+                            Logger.getLogger(getClass().getName()).log(Level.INFO, "on va fair un Toast.makeText");
+                            Toast.makeText("DB path validé", Toast.DURATION_LONG);
+                        }
+
+                    } else {
+                        Logger.getLogger(getClass().getName()).log(Level.INFO, "La connection a echouée");
+                        Toast.makeText("La connection a échouée !", Toast.DURATION_LONG);
+                    }
+
+                } else {
+                    property = file.getCanonicalPath();
+                    propertyDirPath.setText(property);
+                    SettingViewController.this.setting.setProperty(property);
+                    if (DBUtils.updateDB(SettingViewController.this.setting)) {
+                        alert("DB path validé");
+                    }
                 }
-                
-                
 
             } catch (IOException ex) {
                 Logger.getLogger(getClass().getName()).log(Level.SEVERE, null, ex);
@@ -112,11 +137,30 @@ public class SettingViewController implements Initializable {
         }
     }
 
-        public void handleButtonClickForFile(ActionEvent event) {
+    private void storeDataBasePath(File file) {
+        Logger.getLogger(getClass().getName()).log(Level.INFO, "on est dans le store");        
+        File databasePathFile = new File("databasePath.txt");
+        try {
+            Logger.getLogger(getClass().getName()).log(Level.INFO, "write in file:" + databasePathFile.getCanonicalPath());
+            FileWriter fileWriter = new FileWriter(databasePathFile);
+            Logger.getLogger(getClass().getName()).log(Level.INFO, "2");
+            BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
+            Logger.getLogger(getClass().getName()).log(Level.INFO, "write into file: " + databasePathFile.getCanonicalPath());
+            bufferedWriter.write(file.getCanonicalPath() + "/cms.db");
+            Logger.getLogger(getClass().getName()).log(Level.INFO, "4");
+            bufferedWriter.flush();
+            bufferedWriter.close();
+        } catch (IOException ex) {
+            Logger.getLogger(getClass().getName()).log(Level.SEVERE, null, ex);
+            System.exit(-1);
+        }
+    }
+
+    public void handleButtonClickForFile(ActionEvent event) {
         Logger.getLogger(getClass().getName()).log(Level.INFO, "open directory chooser");
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Choisissez un fichier");
-      
+
         File file = fileChooser.showOpenDialog(new Stage());
 
         if (file != null) {
@@ -124,25 +168,23 @@ public class SettingViewController implements Initializable {
                 property = file.getCanonicalPath();
                 propertyDirPath.setText(property);
                 SettingViewController.this.setting.setProperty(property);
-                
-                 if (DBUtils.updateDB(SettingViewController.this.setting)){
+
+                if (DBUtils.updateDB(SettingViewController.this.setting)) {
                     alert("Data path validé");
                 }
-                
-                
 
             } catch (IOException ex) {
                 Logger.getLogger(getClass().getName()).log(Level.SEVERE, null, ex);
             }
         }
     }
-    
+
     void setTextField(String property) {
-   
+
         propertyURL = new TextField(property);
-       validationPropertyURL = new Button("Ok");
+        validationPropertyURL = new Button("Ok");
         //Image image = new Image(getClass().getResourceAsStream("/cms_sio/resources/ok.png"));
-         //validationPropertyURL.setGraphic(new ImageView(image));
+        //validationPropertyURL.setGraphic(new ImageView(image));
         GridPane grid = new GridPane();
         grid.add(propertyURL, 0, 0);
         grid.add(validationPropertyURL, 1, 0);
@@ -153,15 +195,14 @@ public class SettingViewController implements Initializable {
 
         grid.getColumnConstraints().addAll(col1, col2);
         gridPane.add(grid, 1, 0);
-        
+
         validationPropertyURL.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent e) {
-                 Logger.getLogger(SettingViewController.class.getName()).log(Level.INFO, "Clicked");
-               handleTextFieldAction() ;
+                Logger.getLogger(SettingViewController.class.getName()).log(Level.INFO, "Clicked");
+                handleTextFieldAction();
             }
         });
-  
 
     }
 
@@ -169,12 +210,11 @@ public class SettingViewController implements Initializable {
         Logger.getLogger(SettingViewController.class.getName()).log(Level.CONFIG, "new value  " + propertyURL.getText());
         if (checkURI(propertyURL.getText())) {
             setting.setProperty(propertyURL.getText());
-            
-            if ( DBUtils.updateDB(setting)){
+
+            if (DBUtils.updateDB(setting)) {
                 alert("Server path validé");
             }
- 
-            
+
         }
     }
 
@@ -199,12 +239,11 @@ public class SettingViewController implements Initializable {
 
     boolean alert(String message) {
         Logger.getLogger(SettingViewController.class.getName()).log(Level.CONFIG, "BEEP");
-        Toast toast=Toast.makeText(message, new Duration(2000));
+        Toast toast = Toast.makeText(message, new Duration(2000));
         toast.show(gridPane);
        // toast.ma
-        
-       // toast.show(gridPane);
-        
+
+        // toast.show(gridPane);
         return false;
     }
 
@@ -215,7 +254,5 @@ public class SettingViewController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
 
     }
-
-    
 
 }
