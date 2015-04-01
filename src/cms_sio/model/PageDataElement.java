@@ -9,10 +9,7 @@ import cms_sio.model.generic.HasId;
 import cms_sio.model.generic.database.DBUtils;
 import java.sql.SQLException;
 
-/**
- *
- * @author sgoyet
- */
+
 public class PageDataElement implements HasId {
 
     TemplateVariableElement variableElement;

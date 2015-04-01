@@ -9,15 +9,10 @@ import cms_sio.model.generic.HasId;
 import cms_sio.model.generic.database.DBUtils;
 import java.sql.SQLException;
 
-/**
- *
- * @author sgoyet
- */
+
 public class Page implements HasId {
 
     public String name;
-    public String content;
-    public Template template;
     public PageData pageData;
     public int id;
 
@@ -52,6 +47,22 @@ public class Page implements HasId {
     @Override
     public void setId() throws SQLException {
         id = DBUtils.getId(this);
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public PageData getPageData() {
+        return pageData;
+    }
+
+    public void setPageData(PageData pageData) {
+        this.pageData = pageData;
     }
 
 }

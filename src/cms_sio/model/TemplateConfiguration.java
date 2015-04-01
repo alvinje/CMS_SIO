@@ -72,20 +72,20 @@ public class TemplateConfiguration implements HasId{
         buildvariableElementsIds();
     }
    
-    public void clear(TemplateVariableElement variableElement){
+    public void clearVariableElement(TemplateVariableElement variableElement){
         templateVariableElement.clear();
         buildvariableElementsIds();
     }
     
     void buildvariableElementsIds(){
-        StringBuffer buffer=new StringBuffer();
+        StringBuilder builder=new StringBuilder();
         for (TemplateVariableElement variableElement:templateVariableElement){
-            buffer.append(variableElement.id).append("_");
+            builder.append(variableElement.id).append("_");
         }
-        if (buffer.length()>0){
-            buffer.setLength(buffer.length()-1);
+        if (builder.length()>0){
+            builder.setLength(builder.length()-1);
         }
-        templateVariableElementsIds=buffer.toString();
+        templateVariableElementsIds=builder.toString();
     }
 
 
