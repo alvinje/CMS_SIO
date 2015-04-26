@@ -2,16 +2,33 @@
 
 <?import java.lang.*?>
 <?import java.util.*?>
+<?import javafx.geometry.*?>
 <?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.web.*?>
 
-<BorderPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="cms_sio.controllers.TemplateController">
+<BorderPane id="AnchorPane" minWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="cms_sio.controllers.TemplateController">
   <center>
-    <WebView fx:id="web" prefHeight="600.0" prefWidth="800.0" />
+    <AnchorPane minHeight="600.0" minWidth="800.0" prefHeight="-1.0" prefWidth="-1.0" BorderPane.alignment="CENTER" BorderPane.margin="$x1">
+      <children>
+        <ScrollPane fitToHeight="true" fitToWidth="true" hbarPolicy="ALWAYS" pannable="true" prefHeight="-1.0" prefWidth="-1.0" vbarPolicy="ALWAYS" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+          <content>
+            <VBox fx:id="variableElementList" minWidth="600.0" prefHeight="-1.0" prefWidth="-1.0" />
+          </content>
+        </ScrollPane>
+      </children>
+      <padding>
+        <Insets fx:id="x1" />
+      </padding>
+    </AnchorPane>
   </center>
   <top>
-    <Button fx:id="file" mnemonicParsing="false" onAction="#handleButtonClickForFile" text="Choisissez un fichier" />
+    <Button fx:id="file" mnemonicParsing="false" onAction="#handleButtonClickForFile" text="Choisissez un fichier">
+      <BorderPane.margin>
+        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+      </BorderPane.margin>
+    </Button>
+
   </top>
 </BorderPane>

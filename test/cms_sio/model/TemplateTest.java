@@ -25,12 +25,13 @@ public class TemplateTest {
     
     @BeforeClass
     public static void setUpClass() {
-        DBUtils.clearAllTables();
+
+        //DBUtils.clear();
     }
     
     @AfterClass
     public static void tearDownClass() throws SQLException {
-         DBUtils.disconnect();
+        // DBUtils.close();
     }
     
     @Before
@@ -47,98 +48,17 @@ public class TemplateTest {
     @Test
     public void testCreateNewTemplate() throws Exception {
 
-        
-        Template template = new Template();
-        template.setName("template_test");
-        template.setPathOrigin("/bla");
-        TemplateConfiguration configuration =new TemplateConfiguration();
-        
-        TemplateVariableElement variableElement_1=new TemplateVariableElement(
-                            ElementType.TEXT.toString(),
-                            Multiplicity._1.toString(),
-                            "id_title");
-        
-        
-        DBUtils.updateDB(variableElement_1);
-        
-        TemplateVariableElement variableElement_2=new TemplateVariableElement(
-                            ElementType.DataUrl.toString(),
-                            Multiplicity._1.toString(),
-                            "id_image_centrale");
-        
-        DBUtils.updateDB(variableElement_2);
-        
-        configuration.addVariableElement(variableElement_1 );
-        configuration.addVariableElement(variableElement_2 );
-              
-        template.setConfiguration(configuration);
-        
-        DBUtils.updateDB(configuration);
-        DBUtils.updateDB(template);
-        
-        Template template_test=new Template();
-        template_test.setName("template_test");
-        template_test=(Template) DBUtils.loadFromDB(template_test, template_test.getClass().getField("name"));
-        
-        System.out.println("Name is "+template_test.getName());
-        assertTrue(template_test.getName().equals("template_test"));
-        assertTrue(template_test.getPathOrigin().equals("/bla"));
-        
-        
-        assertTrue(null !=template_test.getConfiguration() );
-          
-        assertTrue( template_test.getConfiguration().templateVariableElement.size()==2);
-      
-       assertTrue(template_test.getConfiguration().templateVariableElement.get(0).getElementId().equals("id_title"));
-       assertTrue(template_test.getConfiguration().templateVariableElement.get(1).getElementId().equals("id_image_centrale"));
-        
+     
     }
   
     @Test
     public void testSaveNewTemplate() throws Exception {
-        Template template = new Template();
-        template.setName("template_test_1");
-        template.setPathOrigin("/bla_1");
-        TemplateConfiguration configuration =new TemplateConfiguration();
-        
-        TemplateVariableElement variableElement_1=new TemplateVariableElement(
-                            ElementType.TEXT.toString(),
-                            Multiplicity._1.toString(),
-                            "id_title_1");
-        
-        
-        DBUtils.updateDB(variableElement_1);
-        
-        TemplateVariableElement variableElement_2=new TemplateVariableElement(
-                            ElementType.DataUrl.toString(),
-                            Multiplicity._1.toString(),
-                            "id_image_centrale_1");
-        
-        DBUtils.updateDB(variableElement_2);
-        
-        configuration.addVariableElement(variableElement_1 );
-        configuration.addVariableElement(variableElement_2 );
-              
-        template.setConfiguration(configuration);
-        
-        assertTrue(template.save());
-        
-  
-        Template template_test=new Template("template_test_1");
-
-        assertTrue(template_test.getName().equals("template_test_1"));
-        assertTrue(template_test.getPathOrigin().equals("/bla_1"));
-        
-        
-        assertTrue(null !=template_test.getConfiguration() );
-          
-        assertTrue( template_test.getConfiguration().templateVariableElement.size()==2);
       
-       assertTrue(template_test.getConfiguration().templateVariableElement.get(0).getElementId().equals("id_title_1"));
-       assertTrue(template_test.getConfiguration().templateVariableElement.get(1).getElementId().equals("id_image_centrale_1"));
-        
-        
     }
- 
     
+    
+
+  
+
+   
 }

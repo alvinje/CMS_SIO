@@ -10,59 +10,51 @@ import cms_sio.model.generic.database.DBUtils;
 import java.sql.SQLException;
 
 
-public class Page implements HasId {
-
-    public String name;
-    public PageData pageData;
+/**
+ *
+ * @author sgoyet
+ */
+public class Page implements HasId{
+    public String name; 
+    public String content;
+    public Template template;
+    public Data data;
     public int id;
-
+    
+    
     public Page() {
+     }
+    
+    public Page(int id)  throws Exception{
+         loadFromDB( id);
     }
 
-    public Page(int id) throws Exception {
-        loadFromDB(id);
+    public Page(String name)  throws Exception{
+        this.name=name;
+         DBUtils.loadFromDB(this, getClass().getField("name"));
     }
-
-    public Page(String name) throws Exception {
-        this.name = name;
-        DBUtils.loadFromDB(this, getClass().getField("name"));
-    }
-
+     
     @Override
     public HasId loadFromDB(int id) throws Exception {
-        DBUtils.loadFromDB(this, id);
-        return this;
+      DBUtils.loadFromDB(this, id);
+      return this;
     }
 
     @Override
     public boolean save() {
-        return pageData.save() && DBUtils.updateDB(this);
+        return  data.save() && DBUtils.updateDB(this);
     }
-
+      
+            
     @Override
     public int getId() {
-        return id;
+        return id;    
     }
 
-    @Override
+      @Override
     public void setId() throws SQLException {
-        id = DBUtils.getId(this);
+        id=DBUtils.getId(this);
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public PageData getPageData() {
-        return pageData;
-    }
-
-    public void setPageData(PageData pageData) {
-        this.pageData = pageData;
-    }
-
+ 
 }

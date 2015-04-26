@@ -18,6 +18,7 @@ import java.sql.SQLException;
 public class Template implements HasId{
     public String name="";
     public String pathOrigin="";
+
     public TemplateConfiguration templateConfiguration;
     public int id;
     
@@ -102,6 +103,5 @@ public class Template implements HasId{
     public void setConfiguration(TemplateConfiguration configuration) {
         this.templateConfiguration = configuration;
     }
-
  
 }

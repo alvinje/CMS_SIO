@@ -12,15 +12,20 @@ import cms_sio.model.PageDataElement;
 import cms_sio.model.Multiplicity;
 import cms_sio.model.Template;
 import cms_sio.model.TemplateVariableElement;
-import cms_sio.view.Toast;
 import java.io.File;
-import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javafx.util.Duration;
 import org.jsoup.Jsoup;
+import org.jsoup.nodes.Attribute;
+import org.jsoup.nodes.Attributes;
+import org.jsoup.nodes.Comment;
+import org.jsoup.nodes.DataNode;
 import org.jsoup.nodes.Document;
+import org.jsoup.nodes.DocumentType;
 import org.jsoup.nodes.Element;
+import org.jsoup.nodes.Node;
+import org.jsoup.nodes.TextNode;
+import org.jsoup.nodes.XmlDeclaration;
 import org.jsoup.select.Elements;
 
 /**
@@ -38,53 +43,149 @@ public class TemplateParser {
     public TemplateParser(File file) throws Exception{
         
         data=new PageData();
-        Template template=new Template(file);
-        Toast.makeText("Création d'un template", Toast.DURATION_SHORT);
+        template=new Template(file);
+        System.out.println("Création d'un template");
         TemplateConfiguration configuration=new TemplateConfiguration();
-        template.setConfiguration(configuration);
+    
         
         Logger.getLogger(getClass().getName()).log(Level.INFO, "Parsing file using "+"file://"+file.getParentFile().getAbsolutePath());
         Document doc = Jsoup.parse(file, "UTF-8", "file://"+file.getParentFile().getAbsolutePath());
-        Elements elements= doc.getElementsByAttribute("extra_cms");
-        Logger.getLogger(getClass().getName()).log(Level.INFO, "Nb tags found )"+elements.size());
-          
-        for (Element element:elements){
-            Logger.getLogger(getClass().getName()).log(Level.INFO, "Found "+element.attr("extra_cms"));
-            String contentAttribute=element.attr("extra_cms");
-            String id=element.id();
-            if (id.equals("")){
-                Toast.makeText("Element cms sans id ", Toast.DURATION_LONG);
-                throw new Exception();
-            }
-            
-            TemplateVariableElement variableElement=parseContentAttribute( contentAttribute,id) ;
-             Toast.makeText("Ajout d'une configuration pour le template", Toast.DURATION_SHORT);
-            configuration.addVariableElement(variableElement);
-            
-            String data=element.html();
-            Toast.makeText("Création d'une donnée  pour l'id "+id, Toast.DURATION_SHORT);
-            PageDataElement dataPiece=new PageDataElement(variableElement,data);
-          
-        }
+        
+        
+        Element head=doc.head();
+        Element body=doc.body();
+        parseNode(head,  configuration,  data);
+        parseNode(body,  configuration,  data);
+        
+        template.templateConfiguration=configuration;
         data.template=template;
-        Toast.makeText("Ajout du template pour les données", Toast.DURATION_SHORT);
+        
+        
+     
+        Logger.getLogger(getClass().getName()).log(Level.INFO, "Parsing terminé");
     }
     
-    TemplateVariableElement parseContentAttribute(String contentAttribute,String element_id) throws Exception{
-          String [] pieceAttributes=contentAttribute.split("_");
-          if (pieceAttributes.length<2){
-              Toast.makeText("CMS attribut mal formé (attentu : type_name ", Toast.DURATION_LONG);
-              throw new Exception();
-          }
-          
-          for (ElementType configurationType :ElementType.values()){
-              if (pieceAttributes[0].equals(configurationType.toString())){
-                   Toast.makeText("Création d'un élément de configutation pour  "+pieceAttributes[1], Toast.DURATION_SHORT);
-                return new TemplateVariableElement(configurationType.toString(),Multiplicity._1.toString(),element_id);
-              }
-          }
-
-          throw new Exception();
+    
+    void parseNode(Element element, TemplateConfiguration configuration, PageData pageData){
+        //tag name, attributes, child nodes
+        String key="";
+        getData(element,key,configuration,  pageData);
+        
+       
     }
+     void getData(Node node, String parent_key,TemplateConfiguration configuration, PageData pageData){
+        //tag name, attributes, child nodes
+         Logger.getLogger(getClass().getName()).log(Level.INFO, "Element name "+node.nodeName().toUpperCase()+ " "+node.toString());
+         String key=parent_key+"_"+node.siblingIndex();
+         
+       
+         
+         if ( node instanceof Element ||  node instanceof DataNode || node instanceof TextNode  ){ //or contents of style, script tags etc, where contents should not show in text()
+            String content=getUrl(node);
+            boolean hasUrl=(content!=null && !content.trim().replaceAll(" ","").replaceAll("\t", "").equals(""));
+              Logger.getLogger(getClass().getName()).log(Level.INFO, "has url  "+hasUrl+ " "+content);
+            if (!hasUrl){
+                content=getContent(node);
+            }
+         
+            if (content!=null && !content.trim().replaceAll(" ","").replaceAll("\t", "").equals("")){
+               
+                Logger.getLogger(getClass().getName()).log(Level.INFO, "Add element with content   "+content);
+                TemplateVariableElement templateVariableElement=new TemplateVariableElement(getType(node,hasUrl),Multiplicity._1.toString(),key,isStrucrtural( node, hasUrl));
+                PageDataElement pagdeDataElement=new PageDataElement(templateVariableElement , content);
+                configuration.addVariableElement(templateVariableElement);
+                pageData.addPageDataElement(pagdeDataElement);
+            }
+            
+         }else{
+               Logger.getLogger(getClass().getName()).log(Level.INFO, "Element name "+node.getClass().getSimpleName());
+       
+         }
+  
+        for ( Node child:node.childNodes()){
+            getData(child, key, configuration,  pageData);
+        }
+    }
+     
+    int isStrucrtural(Node node, boolean hasURL){
+        if (hasURL){
+            return 1;
+        }else{
+            return 0;
+        }
+    }
+    String getUrl(Node node) {
+
+        String urlHref = node.attributes().get("href");
+        if (urlHref != null) {
+
+            return urlHref;
+
+        }
+        String urlSrc = node.attributes().get("src");
+        if (urlSrc != null) {
+
+            return urlSrc;
+
+        }
+        return null;
+
+    }
+    String getContent(Node node){
+      if (node instanceof TextNode ){
+                return ((TextNode) node).getWholeText();
+            }else{
+                return null;
+            }
+    }
+    String getType(Node node, boolean hasUrl) {
+        String parentName=node.parent().nodeName().toUpperCase();
+        Logger.getLogger(getClass().getName()).log(Level.WARNING, "Parent name "+parentName + " has url "+hasUrl);
+        if (hasUrl) {
+            switch (parentName) {
+                case "IMG":
+                    return ElementType.Image.toString();
+                case "A":
+                    return ElementType.PageRef.toString();
+                default:
+                    return ElementType.DataUrl.toString();
+            }
+
+        } else {
+            switch (parentName) {
+
+                case "IMG":
+                    return ElementType.Image.toString();
+                case "H1":
+                    return ElementType.Title.toString();
+                case "H2":
+                    return ElementType.Title.toString();
+                case "H3":
+                    return ElementType.Title.toString();
+                case "H4":
+                    return ElementType.Title.toString();
+                case "TITLE":
+                    return ElementType.Title.toString();
+                default:
+                    return ElementType.TEXT.toString();
+
+            }
+        }
+
+    }
+    void getArtibutes(Node node){
+        Attributes attributes=node.attributes();
+        for (Attribute attribute:attributes){
+                
+            String attributeName=attribute.getKey();
+            String value=attribute.getValue();
+        }
+        
+        
+    }
+       
+    
+     
+    
     
 }

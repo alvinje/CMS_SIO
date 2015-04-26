@@ -6,6 +6,7 @@
 package cms_sio.controllers;
 
 import cms_sio.model.generic.database.DBUtils;
+import com.javafx.experiments.scenicview.ScenicView;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -15,7 +16,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
-import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 
 /**
@@ -29,7 +30,7 @@ public class MainController implements Initializable {
     @FXML private Button data;
     @FXML private Button template;    
     @FXML private Button configuration; 
-    @FXML private FlowPane body; 
+    @FXML private AnchorPane body; 
     
     public void showTemplate() throws IOException{
        
@@ -37,12 +38,15 @@ public class MainController implements Initializable {
         Pane myPane = (Pane) fxmlLoader.load(getClass().getResource("/cms_sio/view/Template.fxml"));
         body.getChildren().clear();
         body.getChildren().add(myPane);
+        //ScenicView.show(body);
+        
         Logger.getLogger(MainController.class.getName()).log(Level.INFO, "Show template");
        
     }
     public void showConfiguration() throws IOException{
         FXMLLoader fxmlLoader = new FXMLLoader();
         Pane myPane = (Pane) fxmlLoader.load(getClass().getResource("/cms_sio/view/SettingsView.fxml"));
+        
         body.getChildren().clear();
         body.getChildren().add(myPane);
        

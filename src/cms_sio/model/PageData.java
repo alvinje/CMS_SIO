@@ -14,7 +14,7 @@ import java.util.List;
 
 public class PageData implements HasId {
     public Template template;
-    List<PageDataElement> pageDataElement = new ArrayList<PageDataElement>();
+    public List<PageDataElement> pageDataElement = new ArrayList<PageDataElement>();
     public String pageDataElementsIds;
     public int id;
 
@@ -84,6 +84,14 @@ public class PageData implements HasId {
         }
         pageDataElementsIds=builder.toString();
     }
-
+    
+    public PageDataElement getPageDataElement(TemplateVariableElement templateVariableElement_) throws Exception{
+        for (PageDataElement pageDataElement_:pageDataElement){
+            if (pageDataElement_.variableElement.equals(templateVariableElement_)){
+                return pageDataElement_;
+            }
+        }
+        throw new Exception("Data not found for a variableElement");
+    }
     
 }

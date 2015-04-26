@@ -9,32 +9,24 @@ import cms_sio.model.generic.HasId;
 import cms_sio.model.generic.database.DBUtils;
 import java.sql.SQLException;
 
-
 /**
  *
  * @author sgoyet
  */
-public class TemplateVariableElement implements HasId{
-    public String elementType;
+public class VariableElement implements HasId{
+    public String configurationType;
     public String multiplicity;
-    public String elementId;
-    public int isStructural;
-    public String signature;
+    public String element_id;
     public int id;
     
-    public TemplateVariableElement() {
+    public VariableElement() {
     }
-    public TemplateVariableElement(String elementType,String mulitplicity,String elementId, int isStructural) {
-        
-        assert(elementType!=null);
-        assert(mulitplicity!=null);
-        assert(elementId!=null);
-        this.elementType=elementType;
+    public VariableElement(String configurationType,String mulitplicity,String element_id) {
+        this.configurationType=configurationType;
         this.multiplicity=mulitplicity;
-        this.elementId=elementId;
-        this.isStructural=isStructural;
+        this.element_id=element_id;
     }
-    public TemplateVariableElement(int id)  throws Exception{
+    public VariableElement(int id)  throws Exception{
        loadFromDB( id) ;
     }
     
@@ -59,35 +51,46 @@ public class TemplateVariableElement implements HasId{
         id=DBUtils.getId(this);
     }
 
-
-    public String getElementType() {
-        return elementType;
+    /**
+     * @return the configurationType
+     */
+    public String getConfigurationType() {
+        return configurationType;
     }
 
-
-    public void setElementType(String elementType) {
-        this.elementType = elementType;
+    /**
+     * @param configurationType the configurationType to set
+     */
+    public void setConfigurationType(String configurationType) {
+        this.configurationType = configurationType;
     }
 
-
+    /**
+     * @return the multiplicity
+     */
     public String getMultiplicity() {
         return multiplicity;
     }
 
-
+    /**
+     * @param multiplicity the multiplicity to set
+     */
     public void setMultiplicity(String multiplicity) {
         this.multiplicity = multiplicity;
     }
 
-
-    public String getElementId() {
-        return elementId;
+    /**
+     * @return the element_id
+     */
+    public String getElement_id() {
+        return element_id;
     }
 
-
-    public void setElementId(String element_id) {
-        this.elementId = element_id;
-     
+    /**
+     * @param element_id the element_id to set
+     */
+    public void setElement_id(String element_id) {
+        this.element_id = element_id;
     }
 
     

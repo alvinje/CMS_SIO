@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane id="AnchorPane" fx:id="anchorContainer" maxWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="cms_sio.controllers.TemplateVariableElementFXMLController">
+  <children>
+    <HBox fx:id="hboxContainer" layoutX="14.0" layoutY="14.0" prefHeight="-1.0" prefWidth="-1.0">
+      <children>
+        <CheckBox id="isStructural" fx:id="isData" mnemonicParsing="false" onAction="#onIsDataChanged" opacity="0.99" style=" background-color: #b0c4de;" text="" textFill="RED" wrapText="false" />
+        <Label fx:id="id" text="Label">
+          <HBox.margin>
+            <Insets bottom="2.0" left="2.0" right="10.0" top="1.0" />
+          </HBox.margin>
+        </Label>
+        <Label fx:id="type" text="Label">
+          <HBox.margin>
+            <Insets bottom="2.0" left="2.0" right="10.0" top="2.0" />
+          </HBox.margin>
+        </Label>
+        <Label fx:id="multiplicity" text="Label">
+          <HBox.margin>
+            <Insets bottom="2.0" left="2.0" right="10.0" top="1.0" />
+          </HBox.margin>
+        </Label>
+        <TextArea fx:id="data" maxWidth="500.0" prefHeight="-1.0" prefWidth="-1.0" wrapText="true">
+          <HBox.margin>
+            <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
+          </HBox.margin>
+        </TextArea>
+      </children>
+    </HBox>
+  </children>
+</AnchorPane>

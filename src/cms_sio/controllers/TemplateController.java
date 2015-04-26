@@ -5,6 +5,11 @@
  */
 package cms_sio.controllers;
 
+
+import cms_sio.model.PageData;
+import cms_sio.model.PageDataElement;
+import cms_sio.model.Template;
+import cms_sio.model.TemplateVariableElement;
 import cms_sio.templates.TemplateParser;
 import cms_sio.view.Toast;
 import java.io.File;
@@ -14,10 +19,12 @@ import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
 import javafx.scene.control.Button;
+import javafx.scene.layout.VBox;
 import javafx.scene.web.WebView;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -29,13 +36,11 @@ import javafx.stage.Stage;
  */
 public class TemplateController implements Initializable {
 
-    @FXML
-    Button file;
-    @FXML
-    WebView web;
+    @FXML Button file;
+   // @FXML WebView web;
+    @FXML VBox variableElementList;
 
-
-    public void handleButtonClickForFile(ActionEvent event)  {
+    public void handleButtonClickForFile(ActionEvent event) throws IOException, Exception {
         Logger.getLogger(getClass().getName()).log(Level.INFO, "open directory chooser");
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Choisissez un fichier");
@@ -43,29 +48,59 @@ public class TemplateController implements Initializable {
         File templateFile = fileChooser.showOpenDialog(new Stage());
 
         if (file != null) {
-            try {
-                TemplateParser htmlParser=new TemplateParser( templateFile) ;
-        
+          
+                TemplateParser htmlParser;
+                try {
+                    htmlParser = new TemplateParser(templateFile);
+                } catch (Exception ex) {
+                    Logger.getLogger(TemplateController.class.getName()).log(Level.SEVERE,"PArsing failed "+ex);
+                    return;
+                }
+
+                assert (htmlParser.template.templateConfiguration.templateVariableElement != null);
+                assert (htmlParser.data != null);
+                Logger.getLogger(getClass().getName()).log(Level.INFO, "Nombre d'éléments variables "+htmlParser.template.templateConfiguration.templateVariableElement.size());
                 
+                Template template=  htmlParser.data.template;
                 
-                setWebView(templateFile);
-                file.setText(templateFile.getCanonicalPath());
-             } catch (IOException ex) {
-                Logger.getLogger(getClass().getName()).log(Level.SEVERE, null, ex);
-                Toast.makeText("Problème de chargement du fichier", Toast.DURATION_LONG);
-            }catch (Exception ex) {
+                PageData pageData=htmlParser.data;
+              
+                for (TemplateVariableElement templateVariableElement :template.templateConfiguration.templateVariableElement) {
+
+                    Logger.getLogger(getClass().getName()).log(Level.INFO,  "Un element variable a été trouvé");
+                    FXMLLoader loader = new FXMLLoader(getClass().getResource("/cms_sio/view/TemplateVariableElementFXML.fxml"));
+                    Parent root;
+                    try {
+                        root = (Parent) loader.load();
+                    } catch (IOException ex) {
+                        Logger.getLogger(TemplateController.class.getName()).log(Level.SEVERE,  "Failed to load view "+ex);
+                        return;
+                    }
+                    Logger.getLogger(getClass().getName()).log(Level.INFO, "vue de l' élement variable créé");
+                    TemplateVariableElementFXMLController controler = loader.getController();
+                    assert (controler != null);
                     
-                Logger.getLogger(TemplateController.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            
+                    PageDataElement pageDataElement=pageData.getPageDataElement(templateVariableElement);
+                       assert (pageDataElement != null);
+                       
+                    controler.setVariableElement(templateVariableElement,pageDataElement);
+                   
+                    variableElementList.getChildren().add(root);
+                     Logger.getLogger(getClass().getName()).log(Level.INFO, "Vue ajoutée  " + templateVariableElement.getElementType());
+                }
+
+                //setWebView(templateFile);
+                file.setText(templateFile.getCanonicalPath());
+ 
+
         }
     }
 
     void setWebView(File file) {
-        String path="file://"+ file.getAbsolutePath();
-        Logger.getLogger(getClass().getName()).log(Level.INFO, "Chargement de "+path);
+        String path = "file://" + file.getAbsolutePath();
+        Logger.getLogger(getClass().getName()).log(Level.INFO, "Chargement de " + path);
         Toast.makeText("Chargement de " + path, Toast.DURATION_LONG);
-        web.getEngine().load(path);
+        //web.getEngine().load(path);
 
     }
 

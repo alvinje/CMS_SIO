@@ -9,22 +9,25 @@ import cms_sio.model.generic.HasId;
 import cms_sio.model.generic.database.DBUtils;
 import java.sql.SQLException;
 
-
-public class PageDataElement implements HasId {
-
-    TemplateVariableElement variableElement;
-    public String content="";
+/**
+ *
+ * @author sgoyet
+ */
+public class Data implements HasId{
+    public Template template;
     public int id;
-    public PageDataElement() {
+    public Data(){
+        
     }
-    public PageDataElement(TemplateVariableElement variableElement,String content) {
-        this.variableElement=variableElement;
-        this.content=content;
-    }   
-    public PageDataElement(int id)  throws Exception{
-          loadFromDB( id);
+    public Data(int id)  throws Exception{
+      loadFromDB( id) ;
     }
-   @Override
+     @Override
+    public int getId() {
+        return id;    
+    }
+
+    @Override
     public HasId loadFromDB(int id) throws Exception {
       DBUtils.loadFromDB(this, id);
       return this;
@@ -32,22 +35,15 @@ public class PageDataElement implements HasId {
 
     @Override
     public boolean save() {
-        return DBUtils.updateDB(this);
+        if (template.save()){
+               return DBUtils.updateDB(this); 
+        }else{
+            return false;
+        }
     }
     
-
-    @Override
-    public int getId() {
-        return id;    
-    }
-
     @Override
     public void setId() throws SQLException {
         id=DBUtils.getId(this);
     }
-
-
-
-
-
 }
