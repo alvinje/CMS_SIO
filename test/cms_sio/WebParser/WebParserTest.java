@@ -6,7 +6,13 @@
 
 package cms_sio.WebParser;
 
+import java.io.File;
 import java.io.IOException;
+import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -47,6 +53,14 @@ public class WebParserTest {
         System.out.println("WebParser");
         WebParser instance = new WebParser();
         instance.WebParser();
+        
+         URL url=new URL("http://www.creaduweb.fr/");
+        String host=url.getHost();
+        String fileName="home";
+       
+        assertTrue(Files.exists(new File(host+"/"+fileName).toPath()));
+       
+         
         // TODO review the generated test code and remove the default call to fail.
         
     }
