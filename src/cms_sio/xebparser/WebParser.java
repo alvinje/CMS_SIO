@@ -63,7 +63,7 @@ public class WebParser {
                 URL monUrl = new URL(uneUrl);
                 getDocument(monUrl);
                 listeUrlParsed.add(monUrl.toString());
-
+ 
             }
 
         }
