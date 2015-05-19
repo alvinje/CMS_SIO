@@ -36,6 +36,9 @@ import java.util.logging.Logger;
  */
 public class DBUtils {
 
+    /**
+     *
+     */
     public static Connection connection;
     static HasId[] tablesObjects = new HasId[]{
         new TemplateConfiguration(),
@@ -46,6 +49,9 @@ public class DBUtils {
         new Template(),
         new TemplateVariableElement()};
 
+    /**
+     *
+     */
     public static void createAllTables() {
         connect();
         for (HasId hasId : tablesObjects) {
@@ -56,10 +62,13 @@ public class DBUtils {
         }
     }
     /*
-     * Drop all tables and recreate them
-     *
+     * 
+     * Suppression de toutes les tables et re création de celles-ci
      */
 
+    /**
+     *
+     */
     public static void clearAllTables() {
         connect();
         for (HasId hasId : tablesObjects) {
@@ -70,10 +79,20 @@ public class DBUtils {
         }
     }
 
+    /**
+     *
+     * @throws SQLException
+     */
     public static void disconnect() throws SQLException {
         connection.close();
     }
 
+    /**
+     *
+     * @param hasId
+     * @return
+     * @throws SQLException
+     */
     public static int getId(Object hasId) throws SQLException {
 
         int result;
@@ -113,6 +132,11 @@ public class DBUtils {
         } catch (Exception e) { /* ignored */ }
     }
 
+    /**
+     * Supprime une table
+     * @param hasId
+     * @return
+     */
     public static boolean dropTable(Object hasId) {
         String sql = "";
         Statement stmt = null;
@@ -132,6 +156,11 @@ public class DBUtils {
         return result;
     }
 
+    /**
+     * Creer une table
+     * @param hasId
+     * @return
+     */
     public static boolean createTable(Object hasId) {
         String sql = "";
         boolean result;
@@ -171,6 +200,11 @@ public class DBUtils {
         return result;
     }
 
+    /**
+     * Insert une ligne
+     * @param hasId
+     * @return
+     */
     public static boolean insertRow(HasId hasId) {
         String sql = "";
         boolean result;
@@ -224,6 +258,11 @@ public class DBUtils {
         return result;
     }
 
+    /**
+     * Mets à jour une ligne
+     * @param hasId
+     * @return
+     */
     public static boolean updateRow(HasId hasId) {
         boolean result;
         Statement stmt = null;
@@ -267,6 +306,13 @@ public class DBUtils {
         return result;
     }
 
+    /**
+     * Charge des données depuis la base de donnée
+     * @param hasId
+     * @param field
+     * @return
+     * @throws Exception
+     */
     public static HasId loadFromDB(HasId hasId, Field field) throws Exception {
         boolean result = false;
         Statement stmt = null;
@@ -292,6 +338,13 @@ public class DBUtils {
         return hasId;
     }
 
+    /**
+     * Charge des données depuis la base de donnée
+     * @param hasId
+     * @param id
+     * @return
+     * @throws Exception
+     */
     public static boolean loadFromDB(HasId hasId, int id) throws Exception {
         boolean result = false;
         Statement stmt = null;
@@ -391,6 +444,11 @@ public class DBUtils {
         return false;
     }
 
+    /**
+     * Met à jour la base de donnée
+     * @param hasId
+     * @return
+     */
     public static boolean updateDB(HasId hasId) {
 
         boolean row_exists = checkRowExists(hasId);
@@ -404,6 +462,10 @@ public class DBUtils {
 
     }
 
+    /**
+     * Connecte à la base de donnée
+     * @return
+     */
     public static boolean connect() {
         Logger.getLogger("BDUtils").log(Level.INFO, "a");
         String databasePath = getDatabasePathFromFile();
@@ -424,6 +486,10 @@ public class DBUtils {
         }
     }
 
+    /**
+     *  Récupère le chemin d'accès a la base de donnée
+     * @return
+     */
     public static String getDatabasePathFromFile() {
         Logger.getLogger("Setting").log(Level.INFO, "a1");
         try {
@@ -438,6 +504,11 @@ public class DBUtils {
         }
     }
 
+    /**
+     * Vérifie l'existence des tables
+     * @param object
+     * @return
+     */
     public static boolean checkTableExists(Object object) {
 
         boolean result = false;
@@ -458,6 +529,11 @@ public class DBUtils {
         return result;
     }
 
+    /**
+     * Vérifie l'existance des lignes
+     * @param hasId
+     * @return
+     */
     public static boolean checkRowExists(HasId hasId) {
         boolean result = false;
         Statement stmt = null;

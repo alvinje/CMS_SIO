@@ -59,15 +59,11 @@ public class WebParser {
         List<String> liste=new ArrayList<String>();
         liste.add(doc.toString());
         
-    
+        if (!Files.exists(file.toPath())){
          Files.write(file.toPath(),
          liste,
          StandardCharsets.UTF_8);
-        
-        
-        
-         
-        
     }
 
+}
 }
