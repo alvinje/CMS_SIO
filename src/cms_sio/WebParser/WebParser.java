@@ -62,10 +62,10 @@ public class WebParser {
     }
     public String CreateDirectoryFromURL(URL url1)
     {        
-        String directoryName=url1.toString().replace(url1.getQuery()+"://", "./");
-        if(directoryName.substring(directoryName.length()-1)=="/")
+        String directoryName=url1.toString().replace(url1.getProtocol()+"://", "./");
+        if(directoryName.substring(directoryName.length()-1).equals("/"))
         {
-                    directoryName=directoryName.substring(0,directoryName.length()-2);
+                    directoryName=directoryName.substring(0,directoryName.length()-1);
         }
         File fb = new File(directoryName); 
         
