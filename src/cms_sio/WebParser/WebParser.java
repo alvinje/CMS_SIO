@@ -10,12 +10,9 @@ import java.io.IOException;
 import java.net.Authenticator;
 import java.net.PasswordAuthentication;
 import java.net.URL;
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
-import java.nio.file.OpenOption;
 import java.nio.file.Path;
-import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.List;
 import org.jsoup.Jsoup;
@@ -60,13 +57,24 @@ public class WebParser {
         liste.add(doc.toString());
         
     
-         Files.write(file.toPath(),
-         liste,
-         StandardCharsets.UTF_8);
+        Files.write(file.toPath(),liste,StandardCharsets.UTF_8);
+                
+    }
+    public String CreateDirectoryFromURL(URL url1)
+    {        
+        String directoryName=url1.toString().replace(url1.getQuery()+"://", "./");
+        if(directoryName.substring(directoryName.length()-1)=="/")
+        {
+                    directoryName=directoryName.substring(0,directoryName.length()-2);
+        }
+        File fb = new File(directoryName); 
         
+        fb.mkdirs();
         
-        
-         
+        return directoryName;
+    }
+    public void FillDataBaseWithHTMLPage(String HTMLPage)
+    {
         
     }
 

@@ -8,11 +8,9 @@ package cms_sio.WebParser;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.file.Files;
-import java.nio.file.Path;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -63,6 +61,34 @@ public class WebParserTest {
          
         // TODO review the generated test code and remove the default call to fail.
         
+    }
+
+    /**
+     * Test of CreateDirectoryFromURL method, of class WebParser.
+     */
+    @Test
+    public void testCreateDirectoryFromURL() throws MalformedURLException {
+        System.out.println("CreateDirectoryFromURL");
+        URL url1 = new URL("https://github.com/alvinje/CMS_SIO/");
+        WebParser instance = new WebParser();
+        String expResult = "./github.com/alvinje/CMS_SIO";
+        String result = instance.CreateDirectoryFromURL(url1);
+        assertEquals(expResult, result);
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
+    }
+
+    /**
+     * Test of FillDataBaseWithHTMLPage method, of class WebParser.
+     */
+    @Test
+    public void testFillDataBaseWithHTMLPage() {
+        System.out.println("FillDataBaseWithHTMLPage");
+        String HTMLPage = "";
+        WebParser instance = new WebParser();
+        instance.FillDataBaseWithHTMLPage(HTMLPage);
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
     }
     
 }
