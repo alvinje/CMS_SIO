@@ -6,7 +6,6 @@
 package cms_sio.controllers;
 
 import cms_sio.model.generic.database.DBUtils;
-import com.javafx.experiments.scenicview.ScenicView;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
