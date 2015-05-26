@@ -33,15 +33,15 @@ public class WebParser {
                     }
                 }
         );
-
+        System.setProperty("http.proxyHost", "192.168.216.250");
+        System.setProperty("http.proxyPort", "8080");
     }
 
     void getDocument(URL url) throws Exception {
 
         
 
-        System.setProperty("http.proxyHost", "192.168.216.250");
-        System.setProperty("http.proxyPort", "8080");
+        
 
         URL urlAParser = new URL(url.toString());
         String host = urlAParser.getHost();
@@ -71,7 +71,8 @@ public class WebParser {
         }
 
     }
-
+    
+    //Retourne une liste de toutes les urls
     private List<String> getUrl(Document doc) {
         List<String> urlUrl = new ArrayList();
         Element content = doc.getElementById("content");
