@@ -8,13 +8,13 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.web.*?>
 
-<BorderPane id="AnchorPane" minWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="cms_sio.controllers.TemplateController">
+<BorderPane id="AnchorPane" minWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cms_sio.controllers.TemplateController">
   <center>
     <AnchorPane minHeight="600.0" minWidth="800.0" prefHeight="-1.0" prefWidth="-1.0" BorderPane.alignment="CENTER" BorderPane.margin="$x1">
       <children>
-        <ScrollPane fitToHeight="true" fitToWidth="true" hbarPolicy="ALWAYS" pannable="true" prefHeight="-1.0" prefWidth="-1.0" vbarPolicy="ALWAYS" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <ScrollPane fitToHeight="true" fitToWidth="true" hbarPolicy="ALWAYS" layoutX="13.0" layoutY="14.0" pannable="true" prefHeight="585.0" prefWidth="779.0" vbarPolicy="ALWAYS" AnchorPane.bottomAnchor="1.0" AnchorPane.leftAnchor="13.0" AnchorPane.rightAnchor="8.0" AnchorPane.topAnchor="14.0">
           <content>
-            <VBox fx:id="variableElementList" minWidth="600.0" prefHeight="-1.0" prefWidth="-1.0" />
+            <VBox fx:id="variableElementList" prefWidth="787.0" />
           </content>
         </ScrollPane>
       </children>

@@ -70,9 +70,9 @@ public class TemplateVariableElementFXMLController implements Initializable {
     
     void setColor(){
         if (variableElement.isStructural==0){
-           data.setStyle("-fx-background-color: slateblue; -fx-text-fill: white;");
+           data.setStyle("-fx-background-color: slateblue; -fx-text-fill: black;");
         }else{
-             data.setStyle("-fx-background-color: grey; -fx-text-fill: white;"); 
+             data.setStyle("-fx-background-color: grey; -fx-text-fill: black;"); 
         }
     }
     /**
