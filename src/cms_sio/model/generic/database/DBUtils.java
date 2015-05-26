@@ -488,7 +488,7 @@ public class DBUtils {
     }
 
     /**
-     *  Récupère le chemin d'accès a la base de donnée
+     *  Récupère le chemin d'accès a la base de donnée dans un fichier
      * @return
      */
     public static String getDatabasePathFromFile() {
@@ -506,7 +506,7 @@ public class DBUtils {
     }
 
     /**
-     * Vérifie l'existence des tables
+     * Vérifie l'existence de tables dans la bases de données 
      * @param object
      * @return
      */
@@ -531,7 +531,7 @@ public class DBUtils {
     }
 
     /**
-     * Vérifie l'existance des lignes
+     * Vérifie l'existance des lignes en fonction des informations de l'objet hasId
      * @param hasId
      * @return
      */
