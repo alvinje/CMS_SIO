@@ -55,6 +55,7 @@ public class Setting implements HasId{
         setId(DBUtils.getId(this));   }
 
     /**
+     * Attribut un ID
      * @param id the id to set
      */
     public void setId(int id) {
@@ -62,6 +63,7 @@ public class Setting implements HasId{
     }
 
     /**
+     * Récupère une valeur string correspondant à un nom
      * @return the name
      */
     public String getName() {
@@ -69,6 +71,7 @@ public class Setting implements HasId{
     }
 
     /**
+     * Attribut une valeur string correspondant à un nom
      * @param name the name to set
      */
     public void setName(String name) {
@@ -76,6 +79,7 @@ public class Setting implements HasId{
     }
 
     /**
+     * Récupère une valeur string correspondant à une propriété
      * @return the property
      */
     public String getProperty() {

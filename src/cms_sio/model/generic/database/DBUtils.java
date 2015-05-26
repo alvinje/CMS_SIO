@@ -133,7 +133,7 @@ public class DBUtils {
     }
 
     /**
-     * Supprime une table
+     * Supprime une table identifiée par un objet hasId
      * @param hasId
      * @return
      */
@@ -157,7 +157,7 @@ public class DBUtils {
     }
 
     /**
-     * Creer une table
+     * Crée une table identifiée par un objet hasId
      * @param hasId
      * @return
      */
@@ -201,7 +201,7 @@ public class DBUtils {
     }
 
     /**
-     * Insert une ligne
+     * Insert une ligne identifiée par un objet hasId
      * @param hasId
      * @return
      */
@@ -339,7 +339,8 @@ public class DBUtils {
     }
 
     /**
-     * Charge des données depuis la base de donnée
+     * La méthode vérifie la présence d'un objet hasId et de son Id dans la DB et met
+     *  à jour l'objet hasId avec les informations de la DB.
      * @param hasId
      * @param id
      * @return
@@ -445,7 +446,7 @@ public class DBUtils {
     }
 
     /**
-     * Met à jour la base de donnée
+     * Met à jour la base de donnée en fonction des informations de l'objet hasId
      * @param hasId
      * @return
      */
@@ -463,7 +464,7 @@ public class DBUtils {
     }
 
     /**
-     * Connecte à la base de donnée
+     * Connecte à la base de donnée à l'aide d'un chemin d'accès trouvé dans un fichier (getDatabasePathFromFile)
      * @return
      */
     public static boolean connect() {
