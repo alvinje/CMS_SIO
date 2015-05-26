@@ -110,13 +110,15 @@ public class DBUtils {
         } catch (Exception e) { /* ignored */ }
         try {
             rs.close();
-        } catch (Exception e) { /* ignored */ }
+        } catch (Exception e) { /* ignored by naim */ }
     }
 
     public static boolean dropTable(Object hasId) {
         String sql = "";
         Statement stmt = null;
         boolean result;
+        
+        
         try {
             stmt = connection.createStatement();
             sql = "DROP TABLE  " + hasId.getClass().getSimpleName() + " ;";
