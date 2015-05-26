@@ -53,7 +53,9 @@ public class WebParser {
         //String title = doc.title();
         System.out.print(doc.toString());
         List<String> maListeUrl = getUrl(doc);
+        //Liste des Urls déjà parsées !
         List<String> listeUrlParsed = new ArrayList<String>();
+        //Liste contenant 
         List<String> liste = new ArrayList<String>();
         liste.add(doc.toString());
         Files.write(file.toPath(), liste, StandardCharsets.UTF_8);
