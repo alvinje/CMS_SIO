@@ -65,6 +65,7 @@ public class DataTest {
         DBUtils.connect();
         DBUtils.insertRow(data);
         
+
         Data data_check = new Data(6546);
 
         assertEquals(data_check.template, data.template);
@@ -80,8 +81,7 @@ public class DataTest {
         boolean expResult = false;
         boolean result = instance.save();
         assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+
     }
 
     /**
