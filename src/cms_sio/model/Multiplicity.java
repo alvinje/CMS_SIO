@@ -6,7 +6,8 @@
 package cms_sio.model;
 
 /**
- * retourne une chaine de caractère pour One-to-one, One-to-many, Many-to-one et Many-to-many 
+ * retourne une chaine de caractère pour One-to-one, One-to-many, Many-to-one et Many-to-many
+ * Indique la multiplicité des élements de la configuration d'un template
  * @author sgoyet
  */
 public enum Multiplicity {

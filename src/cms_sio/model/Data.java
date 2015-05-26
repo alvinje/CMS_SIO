@@ -10,7 +10,7 @@ import cms_sio.model.generic.database.DBUtils;
 import java.sql.SQLException;
 
 /**
- * Implémentation des données de la page en fonction de l'id de chaque informations
+ * Implémentation des données de la page en fonction de l'id de chaque information
  * @author sgoyet
  */
 public class Data implements HasId{

@@ -7,6 +7,7 @@ package cms_sio.model;
 
 /**
  *méthodes qui retournent les éléments
+ *Element = les éléments de configuration du template et Type = type de données correspondant à l'élément(string)
  * @author sgoyet
  */
 public enum ElementType {

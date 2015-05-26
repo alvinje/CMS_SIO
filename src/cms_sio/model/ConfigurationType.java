@@ -6,7 +6,7 @@
 package cms_sio.model;
 
 /**
- *
+ * Configuration = configuration des élément du template et Type = type de l'élément(string)
  * @author sgoyet
  */
 public enum ConfigurationType {
