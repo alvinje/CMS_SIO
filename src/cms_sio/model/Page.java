@@ -11,7 +11,7 @@ import java.sql.SQLException;
 
 
 /**
- *
+ * constructeur de la classe Page
  * @author sgoyet
  */
 public class Page implements HasId{

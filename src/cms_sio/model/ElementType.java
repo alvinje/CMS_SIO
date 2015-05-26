@@ -6,7 +6,7 @@
 package cms_sio.model;
 
 /**
- *
+ *méthodes qui retournent les éléments
  * @author sgoyet
  */
 public enum ElementType {

@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- *
+ * Mise en place des variables éléments dans une liste VariableElement
  * @author sgoyet
  */
 public class Configuration implements HasId{
