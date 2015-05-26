@@ -40,6 +40,14 @@ public class TemplateParser {
     public PageData data;
     public Template template;
     
+    /**
+     * reçoit comme paramètre un fichier, puis il va le parser en extrayant un template
+     * et les données associées au template.
+     * 
+     *
+     * @param file
+     * @throws Exception 
+     */
     public TemplateParser(File file) throws Exception{
         
         data=new PageData();
