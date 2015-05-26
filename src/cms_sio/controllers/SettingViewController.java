@@ -34,7 +34,7 @@ import javafx.util.Duration;
 
 /**
  * FXML Controller class
- *
+ * 
  * @author sgoyet
  */
 public class SettingViewController extends SettingDatabasePathController implements Initializable {
