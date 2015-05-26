@@ -59,8 +59,10 @@ public class WebParserTest {
         String fileName="home";
        
         assertTrue(Files.exists(new File(host+"/"+fileName).toPath()));
-       
-         
+        assertTrue(Files.exists(new File(host+"/"+"references").toPath()));
+        assertTrue(Files.exists(new File(host+"/"+"devis").toPath()));
+         //http://www.creaduweb.fr/references/
+        //http://www.creaduweb.fr/devis/
         // TODO review the generated test code and remove the default call to fail.
         
     }

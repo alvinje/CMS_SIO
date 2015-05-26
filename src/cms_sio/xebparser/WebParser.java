@@ -61,7 +61,8 @@ public class WebParser {
         System.out.print(doc.toString());
         
         listeDocumentsParses.add(doc.toString());
-        Files.write(file.toPath(), listeDocumentsParses, StandardCharsets.UTF_8);
+        Files.write(file.toPath(), new ArrayListdoc.toString(), StandardCharsets.UTF_8);
+        System.out.print(doc.toString());
         for (String uneUrl : maListeUrl) {
 
             if (!listeUrlParsed.contains(uneUrl)) {
