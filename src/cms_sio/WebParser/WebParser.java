@@ -25,6 +25,7 @@ import org.jsoup.nodes.Document;
 public class WebParser {
 
     public void WebParser() throws IOException {
+        /*
         final String authUser = "etudiant";
         final String authPassword = "secret";
 
@@ -59,7 +60,7 @@ public class WebParser {
     
         Files.write(file.toPath(),liste,StandardCharsets.UTF_8);
                 
-    }
+    */}
     public String CreateDirectoryFromURL(URL url1)
     {        
         String directoryName=url1.toString().replace(url1.getProtocol()+"://", "./");
@@ -67,9 +68,9 @@ public class WebParser {
         {
                     directoryName=directoryName.substring(0,directoryName.length()-1);
         }
-        File fb = new File(directoryName); 
+        File dossier = new File(directoryName); 
         
-        fb.mkdirs();
+        dossier.mkdirs();
         
         return directoryName;
     }

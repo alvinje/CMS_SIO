@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -69,11 +70,19 @@ public class WebParserTest {
     @Test
     public void testCreateDirectoryFromURL() throws MalformedURLException {
         System.out.println("CreateDirectoryFromURL");
-        URL url1 = new URL("https://github.com/alvinje/CMS_SIO/");
-        WebParser instance = new WebParser();
-        String expResult = "./github.com/alvinje/CMS_SIO";
-        String result = instance.CreateDirectoryFromURL(url1);
-        assertEquals(expResult, result);
+        URL[] urls = new URL[]{new URL("https://github.com/alvinje/CMS_SIO/"),
+                               new URL("https://github.com/")
+        } ;
+        String[] resultatAttendu = new String []{"./github.com/alvinje/CMS_SIO",
+                                                 "./github.com"
+        }; 
+        WebParser webParser = new WebParser();
+        for (int i=0;i<urls.length;i++){
+            webParser.CreateDirectoryFromURL(urls[i]);
+        }
+        for (int i=0;i<urls.length;i++){
+            assertTrue(Files.exists((new File(resultatAttendu[i])).toPath()));
+        }
         // TODO review the generated test code and remove the default call to fail.
     }
 
