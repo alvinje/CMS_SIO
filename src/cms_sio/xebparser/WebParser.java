@@ -35,12 +35,18 @@ public class WebParser {
         );
         System.setProperty("http.proxyHost", "192.168.216.250");
         System.setProperty("http.proxyPort", "8080");
+        
     }
 
     void getDocument(URL url) throws Exception {
 
+        getConnecProxy();
         
-
+        //Liste des Urls déjà parsées !
+        List<String> listeUrlParsed = new ArrayList<String>();
+        
+        //Liste contenant 
+        List<String> listeDocumentsParses = new ArrayList<String>();
         
 
         URL urlAParser = new URL(url.toString());
@@ -50,15 +56,12 @@ public class WebParser {
         Path path = Files.createDirectory(new File(host).toPath());
         File file = new File(host + "/" + fileName);
         Document doc = Jsoup.connect(urlAParser.toString()).get();
+        List<String> maListeUrl = getUrl(doc);
         //String title = doc.title();
         System.out.print(doc.toString());
-        List<String> maListeUrl = getUrl(doc);
-        //Liste des Urls déjà parsées !
-        List<String> listeUrlParsed = new ArrayList<String>();
-        //Liste contenant 
-        List<String> liste = new ArrayList<String>();
-        liste.add(doc.toString());
-        Files.write(file.toPath(), liste, StandardCharsets.UTF_8);
+        
+        listeDocumentsParses.add(doc.toString());
+        Files.write(file.toPath(), listeDocumentsParses, StandardCharsets.UTF_8);
         for (String uneUrl : maListeUrl) {
 
             if (!listeUrlParsed.contains(uneUrl)) {
