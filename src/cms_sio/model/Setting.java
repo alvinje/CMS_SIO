@@ -11,7 +11,8 @@ import java.sql.SQLException;
 
 
 /**
- *
+ *Définit HasId avec les données des ID et des Names pour ensuite charger depuis la base
+ * de données et il va enregistrer les données en mettant à jour la base de données
  * @author sgoyet
  */
 public class Setting implements HasId{
@@ -54,35 +55,35 @@ public class Setting implements HasId{
     public void setId() throws SQLException {
         setId(DBUtils.getId(this));   }
 
-    /**
+    /**Constructeur de setID. Configuration d'un ID
      * @param id the id to set
      */
     public void setId(int id) {
         this.id = id;
     }
 
-    /**
+    /** Récupère le nom
      * @return the name
      */
     public String getName() {
         return name;
     }
 
-    /**
+    /**Constructeur d'un nom.
      * @param name the name to set
      */
     public void setName(String name) {
         this.name = name;
     }
 
-    /**
+    /**Récupère la chaine de caractère de la Propriété
      * @return the property
      */
     public String getProperty() {
         return property;
     }
 
-    /**
+    /**Constructeur de la chaine de caractère Property.
      * @param property the property to set
      */
     public void setProperty(String property) {

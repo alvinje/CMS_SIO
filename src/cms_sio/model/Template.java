@@ -62,42 +62,42 @@ public class Template implements HasId{
         id=DBUtils.getId(this);
     }
 
-    /**
+    /**Retourne un nom
      * @return the name
      */
     public String getName() {
         return name;
     }
 
-    /**
+    /**Configure un nom
      * @param name the name to set
      */
     public void setName(String name) {
         this.name = name;
     }
 
-    /**
+    /** Récupère le chemin d'origine
      * @return the pathOrigin
      */
     public String getPathOrigin() {
         return pathOrigin;
     }
 
-    /**
+    /**Constructeur de setPathOrigin. Définit le chemin d'origine
      * @param pathOrigin the pathOrigin to set
      */
     public void setPathOrigin(String pathOrigin) {
         this.pathOrigin = pathOrigin;
     }
 
-    /**
+    /**Récupère la configuration du template
      * @return the configuration
      */
     public TemplateConfiguration getConfiguration() {
         return templateConfiguration;
     }
 
-    /**
+    /**Constructeur de setConfiguration. Définit la configuration du template 
      * @param configuration the configuration to set
      */
     public void setConfiguration(TemplateConfiguration configuration) {

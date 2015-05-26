@@ -6,7 +6,8 @@
 package cms_sio.model;
 
 /**
- *
+ * Refturne des configuration.
+ * Définit des types de configuration TEXT, HTML, IMAGE, VIDEO, MUSIC, TITLE, PAGEREF, DATAURL
  * @author sgoyet
  */
 public enum ConfigurationType {

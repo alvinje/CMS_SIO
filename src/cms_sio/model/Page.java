@@ -11,7 +11,8 @@ import java.sql.SQLException;
 
 
 /**
- * constructeur de la classe Page
+ * constructeur de la classe Page en utilisant un nom, un contenu, un template, des données et un ID. 
+ * Puis il va générer une page depuis la base de données.
  * @author sgoyet
  */
 public class Page implements HasId{
